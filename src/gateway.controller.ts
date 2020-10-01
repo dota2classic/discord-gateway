@@ -1,10 +1,20 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { Constructor, EventBus } from '@nestjs/cqrs';
+import { GatewayQueueUpdatedEvent } from './gateway/events/gateway-queue-updated.event';
 
 @Controller()
 export class GatewayController {
-  @EventPattern('GatewayQueueUpdatedEvent')
-  async GatewayQueueUpdatedEvent(data: any) {
+  constructor(private readonly ebus: EventBus) {}
 
+  private event<T>(constructor: Constructor<T>, data: any) {
+    const buff = data;
+    buff.__proto__ = constructor.prototype;
+    this.ebus.publish(buff);
+  }
+
+  @EventPattern('GatewayQueueUpdatedEvent')
+  async GatewayQueueUpdatedEvent(data: GatewayQueueUpdatedEvent) {
+    this.event(GatewayQueueUpdatedEvent, data);
   }
 }
