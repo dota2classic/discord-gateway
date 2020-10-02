@@ -1,0 +1,10 @@
+.git
+Dockerfile
+.DS_Store
+.gitignore
+node_modules
+README.md
+env.*
+/devops/*
+
+.env

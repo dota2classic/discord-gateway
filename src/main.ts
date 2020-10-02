@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { EventPublisher } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'src/queue/model/queue-message-sync.model';
+import { isDev } from 'src/config/env';
 require('dotenv').config()
 
 
@@ -15,7 +16,7 @@ async function bootstrap() {
     AppModule,
     {
       transport: Transport.TCP,
-      options: { retryAttempts: 5, retryDelay: 3000, port: 5001 },
+      options: { retryAttempts: 5, retryDelay: 3000, port: 5001, host: '0.0.0.0' },
     },
   );
   app.listen(() => console.log('Microservice is listening'));

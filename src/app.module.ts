@@ -8,10 +8,9 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { devDbConfig, Entities, prodDbConfig } from './config/typeorm.config';
 import { QueueProviders } from 'src/queue';
 import { ClientProvider, GuildProvider } from 'src/config/discord.provider';
+import { isDev } from 'src/config/env';
 
-export const profile = process.env.PROFILE;
-export const isProd = profile === 'prod';
-export const isDev = !isProd;
+
 
 @Module({
   imports: [
