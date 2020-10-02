@@ -1,12 +1,12 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
-import { CreateQueueMessageCommand } from 'src/queue/command/SyncQueueMessage/create-queue-message.command';
 import { QueueMessageModel } from 'src/queue/model/queue-message.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MatchmakingMode } from 'src/gateway/shared-types/matchmaking-mode';
 import { Client, MessageOptions, TextChannel } from 'discord.js';
 import { QueueMessageCreatedEvent } from 'src/queue/event/queue-message-created.event';
+import { CreateQueueMessageCommand } from 'src/queue/command/CreateQueueMessage/create-queue-message.command';
 
 @CommandHandler(CreateQueueMessageCommand)
 export class CreateQueueMessageHandler

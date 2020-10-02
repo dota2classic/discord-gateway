@@ -5,11 +5,13 @@ import { GatewayService } from './gateway.service';
 import { GatewayController } from './gateway.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { devDbConfig, Entities, prodDbConfig } from './db/typeorm.config';
+import { devDbConfig, Entities, prodDbConfig } from './config/typeorm.config';
+import { QueueProviders } from 'src/queue';
+import { ClientProvider, GuildProvider } from 'src/config/discord.provider';
 
-const profile = process.env.PROFILE;
-const isProd = profile === 'prod';
-const isDev = !isProd;
+export const profile = process.env.PROFILE;
+export const isProd = profile === 'prod';
+export const isDev = !isProd;
 
 @Module({
   imports: [
@@ -27,6 +29,13 @@ const isDev = !isProd;
     ]),
   ],
   controllers: [GatewayController],
-  providers: [GatewayService, AppService],
+  providers: [
+    ClientProvider,
+    GuildProvider,
+
+    GatewayService,
+    AppService,
+    ...QueueProviders,
+  ],
 })
 export class AppModule {}
