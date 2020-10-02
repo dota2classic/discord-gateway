@@ -8,8 +8,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { devDbConfig, Entities, prodDbConfig } from './config/typeorm.config';
 import { QueueProviders } from 'src/queue';
 import { ClientProvider, GuildProvider } from 'src/config/discord.provider';
-import { isDev } from 'src/config/env';
-
+import { CORE_GATEWAY_HOST, isDev } from 'src/config/env';
 
 
 @Module({
@@ -21,11 +20,16 @@ import { isDev } from 'src/config/env';
     TypeOrmModule.forFeature(Entities),
     ClientsModule.register([
       {
-        name: 'MATH_SERVICE',
+        name: 'CoreMicroService',
         transport: Transport.TCP,
-        options: { port: 5000 },
+        options: {
+          port: 5000,
+          host: CORE_GATEWAY_HOST(),
+          retryAttempts: 10,
+          retryDelay: 5000,
+        },
       },
-    ]),
+    ] as any),
   ],
   controllers: [GatewayController],
   providers: [

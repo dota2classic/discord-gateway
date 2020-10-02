@@ -8,12 +8,26 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 0.0.0.0:5432:5432
-  back:
+  discord:
+    depends_on:
+      - core
+      - db
     container_name: discord-gateway
     image: dota2classic/matchmaking:discord-gateway
     env_file:
       - ./.env
-    volumes:
-      - ./storage:/usr/src/app/dist/upload
+    environment:
+      - CORE_GATEWAY_HOST=core
+      - DISCORD_GATEWAY_HOST=discord
     ports:
       - 0.0.0.0:5001:5001
+  core:
+    container_name: matchmaking-core
+    image: dota2classic/matchmaking:core
+    environment:
+      - CORE_GATEWAY_HOST=core
+      - DISCORD_GATEWAY_HOST=discord
+    env_file:
+      - ./.env
+    ports:
+      - 0.0.0.0:5000:5000

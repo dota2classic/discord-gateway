@@ -7,7 +7,7 @@ import { inspect } from 'util';
 @Injectable()
 export class GatewayService implements OnApplicationBootstrap {
   constructor(
-    @Inject('MATH_SERVICE') private client: ClientProxy,
+    @Inject('CoreMicroService') private client: ClientProxy,
     private readonly ebus: EventBus,
   ) {}
 
