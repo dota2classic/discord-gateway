@@ -18,7 +18,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker": "docker build . -t dota2classic/matchmaking:discord-gateway && docker push dota2classic/matchmaking:discord-gateway",
+    "docker-local": "docker build . -t dota2classic/matchmaking:discord-gateway"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
@@ -26,9 +28,12 @@
     "@nestjs/cqrs": "^7.0.1",
     "@nestjs/microservices": "^7.4.4",
     "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/typeorm": "^7.1.4",
+    "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.4",
+    "typeorm": "^0.2.28"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",

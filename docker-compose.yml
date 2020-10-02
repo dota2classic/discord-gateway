@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  db:
+    container_name: discord-gateway-db
+    image: postgres
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=G32!AuXd]2jLCn>Bg<~^YxH~m3kLEFq
+    ports:
+      - 0.0.0.0:5432:5432
+  back:
+    container_name: discord-gateway
+    image: dota2classic/matchmaking:discord-gateway
+    volumes:
+      - ./storage:/usr/src/app/dist/upload
+    ports:
+      - 0.0.0.0:5000:5000
