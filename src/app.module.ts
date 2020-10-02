@@ -8,7 +8,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { devDbConfig, Entities, prodDbConfig } from './config/typeorm.config';
 import { QueueProviders } from 'src/queue';
 import { ClientProvider, GuildProvider } from 'src/config/discord.provider';
-import { CORE_GATEWAY_HOST, isDev } from 'src/config/env';
+import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'src/config/env';
 
 
 @Module({
@@ -21,10 +21,9 @@ import { CORE_GATEWAY_HOST, isDev } from 'src/config/env';
     ClientsModule.register([
       {
         name: 'CoreMicroService',
-        transport: Transport.TCP,
+        transport: Transport.REDIS,
         options: {
-          port: 5000,
-          host: CORE_GATEWAY_HOST(),
+          url: REDIS_URL(),
           retryAttempts: 10,
           retryDelay: 5000,
         },

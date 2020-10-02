@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { EventPublisher } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'src/queue/model/queue-message-sync.model';
-import { DISCORD_GATEWAY_HOST} from 'src/config/env';
+import { DISCORD_GATEWAY_HOST, REDIS_URL } from 'src/config/env';
 
 require('dotenv').config();
 
@@ -15,12 +15,11 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.REDIS,
       options: {
-        retryAttempts: 5,
-        retryDelay: 3000,
-        port: 5001,
-        host: DISCORD_GATEWAY_HOST()
+        url: REDIS_URL(),
+        retryAttempts: 10,
+        retryDelay: 5000,
       },
     },
   );
