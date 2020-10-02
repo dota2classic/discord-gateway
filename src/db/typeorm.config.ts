@@ -1,6 +1,7 @@
+import { QueueMessageModel } from 'src/queue/model/queue-message.model';
 
 export const Entities = [
-
+  QueueMessageModel
 ]
 export const devDbConfig: any = {
   type: 'sqlite',
