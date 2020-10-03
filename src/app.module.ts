@@ -20,7 +20,16 @@ import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'src/config/env';
     TypeOrmModule.forFeature(Entities),
     ClientsModule.register([
       {
-        name: 'CoreMicroService',
+        name: 'RedisEventQueue',
+        transport: Transport.REDIS,
+        options: {
+          url: REDIS_URL(),
+          retryAttempts: 10,
+          retryDelay: 5000,
+        },
+      },
+      {
+        name: 'QueryCore',
         transport: Transport.REDIS,
         options: {
           url: REDIS_URL(),
