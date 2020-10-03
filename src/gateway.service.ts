@@ -2,7 +2,7 @@ import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { EventBus, QueryBus } from '@nestjs/cqrs';
 import { MatchmakingMode } from 'src/gateway/shared-types/matchmaking-mode';
-import { GatewayQueueStateQuery } from 'src/gateway/queries/GatewayQueueState/gateway-queue-state.query';
+import { QueueStateQuery } from 'src/gateway/queries/QueueState/queue-state.query';
 
 @Injectable()
 export class GatewayService implements OnApplicationBootstrap {
@@ -19,7 +19,7 @@ export class GatewayService implements OnApplicationBootstrap {
 
     console.log(
       await this.qbus.execute(
-        new GatewayQueueStateQuery(MatchmakingMode.SOLOMID),
+        new QueueStateQuery(MatchmakingMode.SOLOMID),
       ),
     );
   }
