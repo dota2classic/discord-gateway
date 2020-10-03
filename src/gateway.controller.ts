@@ -1,9 +1,9 @@
 import { Controller, Logger } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { Constructor, EventBus } from '@nestjs/cqrs';
-import { GatewayQueueUpdatedEvent } from './gateway/events/gateway-queue-updated.event';
-import { GatewayQueueCreatedEvent } from './gateway/events/gateway-queue-created.event';
 import { inspect } from 'util';
+import { QueueCreatedEvent } from './gateway/events/queue-created.event';
+import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
 
 @Controller()
 export class GatewayController {
@@ -18,13 +18,13 @@ export class GatewayController {
     this.logger.log(inspect(buff))
   }
 
-  @EventPattern('GatewayQueueUpdatedEvent')
-  async GatewayQueueUpdatedEvent(data: GatewayQueueUpdatedEvent) {
-    this.event(GatewayQueueUpdatedEvent, data);
+  @EventPattern('QueueUpdatedEvent')
+  async QueueUpdatedEvent(data: QueueUpdatedEvent) {
+    this.event(QueueUpdatedEvent, data);
   }
 
-  @EventPattern('GatewayQueueCreatedEvent')
-  async GatewayQueueCreatedEvent(data: GatewayQueueCreatedEvent) {
-      this.event(GatewayQueueCreatedEvent, data);
+  @EventPattern('QueueCreatedEvent')
+  async QueueCreatedEvent(data: QueueCreatedEvent) {
+      this.event(QueueCreatedEvent, data);
   }
 }
