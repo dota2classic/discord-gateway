@@ -5,6 +5,7 @@ import { LoadQueueMessageHandler } from 'queue/command/LoadQueueMessage/load-que
 import { QueueSaga } from 'queue/saga/queue.saga';
 import { PlayerEnterQueueHandler } from 'queue/command/PlayerEnterQueue/player-enter-queue.handler';
 import { DeleteQueueMessageHandler } from 'queue/command/DeleteQueueMessage/delete-queue-message.handler';
+import { PlayerLeaveQueueHandler } from 'queue/command/PlayerLeaveQueue/player-leave-queue.handler';
 
 const CommandHandlers = [
   CreateQueueMessageHandler,
@@ -13,7 +14,8 @@ const CommandHandlers = [
 
   // gateway
   QueueStateHandler,
-  PlayerEnterQueueHandler
+  PlayerEnterQueueHandler,
+  PlayerLeaveQueueHandler
 ];
 
 const QueryHandlers = [QueueStateHandler];

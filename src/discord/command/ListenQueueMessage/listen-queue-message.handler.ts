@@ -16,6 +16,7 @@ import {
 } from 'discord.js';
 import { PlayerEnterQueueCommand } from 'gateway/commands/player-enter-queue.command';
 import { MessageMissingEvent } from 'discord/event/message-missing.event';
+import { PlayerLeaveQueueCommand } from 'gateway/commands/player-leave-queue.command';
 
 @CommandHandler(ListenQueueMessageCommand)
 export class ListenQueueMessageHandler
@@ -71,7 +72,9 @@ export class ListenQueueMessageHandler
       } else if (reaction.emoji.id === deqEmoji.id) {
         // const party = await this.partyRepository.getPartyOf(qp);
         // this.ebus.publish(new DiscordLeaveQueueEvent(party.id, command.mode));
-        // await this.cbus.execute(new PlayerEnterQueueCommand(user.id))
+        await this.cbus.execute(
+          new PlayerLeaveQueueCommand(user.id, command.mode),
+        );
       }
       await msg?.reactions.resolve(reaction.emoji.id)?.users.remove(user.id);
     });
