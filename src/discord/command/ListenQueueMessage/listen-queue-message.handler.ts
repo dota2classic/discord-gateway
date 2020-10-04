@@ -1,8 +1,9 @@
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { ListenQueueMessageCommand } from 'discord/command/ListenQueueMessage/listen-queue-message.command';
 import { EmojiService } from 'discord/emoji.service';
 import { Client, MessageReaction, TextChannel, User } from 'discord.js';
+import { PlayerEnterQueueCommand } from 'gateway/commands/player-enter-queue.command';
 
 @CommandHandler(ListenQueueMessageCommand)
 export class ListenQueueMessageHandler
@@ -13,6 +14,7 @@ export class ListenQueueMessageHandler
     private readonly client: Client,
     private readonly ebus: EventBus,
     private readonly emojiService: EmojiService,
+    private readonly cbus: CommandBus
   ) {}
 
   async execute(command: ListenQueueMessageCommand) {
@@ -42,9 +44,12 @@ export class ListenQueueMessageHandler
     collector.addListener('collect', async (reaction, user: User) => {
       if (reaction.emoji.id === qEmoji.id) {
         // this.ebus.publish(new DiscordEnterQueueEvent(qp, command.mode));
+        // for now
+        await this.cbus.execute(new PlayerEnterQueueCommand(user.id))
       } else if (reaction.emoji.id === deqEmoji.id) {
         // const party = await this.partyRepository.getPartyOf(qp);
         // this.ebus.publish(new DiscordLeaveQueueEvent(party.id, command.mode));
+        // await this.cbus.execute(new PlayerEnterQueueCommand(user.id))
       }
       await msg?.reactions.resolve(reaction.emoji.id)?.users.remove(user.id);
     });

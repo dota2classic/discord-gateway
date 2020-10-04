@@ -4,30 +4,28 @@ import { LoadQueueMessageCommand } from 'queue/command/LoadQueueMessage/load-que
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueueMessageModel } from 'queue/model/queue-message.model';
 import { Repository } from 'typeorm';
-import { Client } from "discord.js";
-import { SyncQueueMessageCommand } from 'queue/command/SyncQueueMessage/sync-queue-message.command';
+import { QueueMessageLoadedEvent } from 'queue/event/queue-message-loaded.event';
 
 @CommandHandler(LoadQueueMessageCommand)
-export class LoadQueueMessageHandler implements ICommandHandler<LoadQueueMessageCommand> {
-
-  private readonly logger = new Logger(LoadQueueMessageHandler.name)
+export class LoadQueueMessageHandler
+  implements ICommandHandler<LoadQueueMessageCommand> {
+  private readonly logger = new Logger(LoadQueueMessageHandler.name);
 
   constructor(
     @InjectRepository(QueueMessageModel)
     private readonly queueMessageModelRepository: Repository<QueueMessageModel>,
     private readonly ebus: EventBus,
-  ) {
-
-  }
+  ) {}
 
   async execute(command: LoadQueueMessageCommand) {
     const qm = await this.queueMessageModelRepository.findOne({
-      mode: command.mode
-    })
+      mode: command.mode,
+    });
 
-    if(qm){
-      this.ebus.publish(new SyncQueueMessageCommand(qm.mode, qm.channelID, qm.messageID))
+    if (qm) {
+      this.ebus.publish(
+        new QueueMessageLoadedEvent(qm.mode, qm.channelID, qm.messageID),
+      );
     }
   }
-
 }
