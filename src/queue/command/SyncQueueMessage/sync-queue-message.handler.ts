@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
-import { SyncQueueMessageCommand } from 'src/queue/command/SyncQueueMessage/sync-queue-message.command';
+import { SyncQueueMessageCommand } from 'queue/command/SyncQueueMessage/sync-queue-message.command';
 import { Client } from 'discord.js';
-import { QueueMessageSyncRepository } from 'src/queue/repository/queue-message-sync.repository';
+import { QueueMessageSyncRepository } from 'queue/repository/queue-message-sync.repository';
 
 @CommandHandler(SyncQueueMessageCommand)
 export class SyncQueueMessageHandler

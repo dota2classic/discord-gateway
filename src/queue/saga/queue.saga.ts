@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
-import { QueueCreatedEvent } from 'src/gateway/events/queue-created.event';
+import { QueueCreatedEvent } from 'gateway/events/queue-created.event';
 
 @Injectable()
 export class QueueSaga {

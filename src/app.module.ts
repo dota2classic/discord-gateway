@@ -6,9 +6,10 @@ import { GatewayController } from './gateway.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { devDbConfig, Entities, prodDbConfig } from './config/typeorm.config';
-import { QueueProviders } from 'src/queue';
-import { ClientProvider, GuildProvider } from 'src/config/discord.provider';
-import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'src/config/env';
+import { QueueProviders } from 'queue';
+import { ClientProvider, GuildProvider } from 'config/discord.provider';
+import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'config/env';
+import { DiscordProviders } from 'discord';
 
 
 @Module({
@@ -47,6 +48,7 @@ import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'src/config/env';
     GatewayService,
     AppService,
     ...QueueProviders,
+    ...DiscordProviders
   ],
 })
 export class AppModule {}

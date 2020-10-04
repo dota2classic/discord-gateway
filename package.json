@@ -67,6 +67,13 @@
       "json",
       "ts"
     ],
+    "moduleDirectories": [
+      "./src",
+      "node_modules"
+    ],
+    "setupFilesAfterEnv": [
+      "../jest.ts"
+    ],
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {

@@ -1,8 +1,8 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { EventBus, QueryBus } from '@nestjs/cqrs';
-import { MatchmakingMode } from 'src/gateway/shared-types/matchmaking-mode';
-import { QueueStateQuery } from 'src/gateway/queries/QueueState/queue-state.query';
+import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
+import { QueueStateQuery } from 'gateway/queries/QueueState/queue-state.query';
 
 @Injectable()
 export class GatewayService implements OnApplicationBootstrap {

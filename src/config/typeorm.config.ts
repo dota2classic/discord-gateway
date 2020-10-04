@@ -1,9 +1,18 @@
-import { QueueMessageModel } from 'src/queue/model/queue-message.model';
+import { QueueMessageModel } from 'queue/model/queue-message.model';
 
 export const Entities = [
   QueueMessageModel
 ]
 export const devDbConfig: any = {
+  type: 'sqlite',
+  database: ':memory:',
+  entities: Entities,
+  synchronize: true,
+  keepConnectionAlive: true,
+};
+
+
+export const testDbConfig: any = {
   type: 'sqlite',
   database: ':memory:',
   entities: Entities,

@@ -1,4 +1,4 @@
-import { MatchmakingMode } from 'src/gateway/shared-types/matchmaking-mode';
+import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
 import { Snowflake } from 'discord.js';
 
 export class SyncQueueMessageCommand {

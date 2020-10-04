@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { EventPublisher } from '@nestjs/cqrs';
-import { QueueMessageSyncModel } from 'src/queue/model/queue-message-sync.model';
-import { DISCORD_GATEWAY_HOST, REDIS_URL } from 'src/config/env';
+import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
+import { DISCORD_GATEWAY_HOST, REDIS_URL } from 'config/env';
 
 require('dotenv').config();
 

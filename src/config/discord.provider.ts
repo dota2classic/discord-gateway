@@ -1,5 +1,5 @@
 import { Client, Guild } from 'discord.js';
-import { DISCORD_API_TOKEN, DISCORD_SERVER_ID } from 'src/config/env';
+import { DISCORD_API_TOKEN, DISCORD_SERVER_ID } from 'config/env';
 import { Logger } from '@nestjs/common';
 
 export const GuildProvider = {

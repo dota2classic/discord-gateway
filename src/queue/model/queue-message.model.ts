@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { MatchmakingMode } from 'src/gateway/shared-types/matchmaking-mode';
+import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
 import { Snowflake } from 'discord.js';
 
 

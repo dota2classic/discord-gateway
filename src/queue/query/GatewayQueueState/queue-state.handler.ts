@@ -2,8 +2,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { QueueStateQuery } from 'src/gateway/queries/QueueState/queue-state.query';
-import { QueueStateQueryResult } from 'src/gateway/queries/QueueState/queue-state-query.result';
+import { QueueStateQuery } from 'gateway/queries/QueueState/queue-state.query';
+import { QueueStateQueryResult } from 'gateway/queries/QueueState/queue-state-query.result';
 
 @QueryHandler(QueueStateQuery)
 export class QueueStateHandler
