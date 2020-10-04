@@ -8,6 +8,8 @@ import { LoadQueueMessageCommand } from 'queue/command/LoadQueueMessage/load-que
 import { MatchmakingModes } from 'gateway/shared-types/matchmaking-mode';
 import { QueueMessageLoadedEvent } from 'queue/event/queue-message-loaded.event';
 import { ListenQueueMessageCommand } from 'discord/command/ListenQueueMessage/listen-queue-message.command';
+import { MessageMissingEvent } from 'discord/event/message-missing.event';
+import { DeleteQueueMessageCommand } from 'queue/command/DeleteQueueMessage/delete-queue-message.command';
 
 @Injectable()
 export class QueueSaga {
@@ -32,6 +34,15 @@ export class QueueSaga {
     return events$.pipe(
       ofType(MicroserviceStartedEvent),
       mergeMap(e => MatchmakingModes.map(t => new LoadQueueMessageCommand(t))),
+    );
+  };
+
+
+  @Saga()
+  messageMissing = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(MessageMissingEvent),
+      map(e => new DeleteQueueMessageCommand(e.mode)),
     );
   };
 }

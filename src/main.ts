@@ -7,6 +7,7 @@ import { REDIS_URL } from 'config/env';
 import { Logger } from '@nestjs/common';
 import { MicroserviceStartedEvent } from 'queue/event/microservice-started.event';
 import { Subscriber } from 'rxjs';
+import { inspect } from 'util';
 
 require('dotenv').config();
 
@@ -42,8 +43,8 @@ async function bootstrap() {
   ebus._subscribe(
     new Subscriber<any>(e => {
       elogger.log(
-        // `${inspect(e)}`,
-        e.__proto__.constructor.name,
+        `${inspect(e)}`,
+        // e.__proto__.constructor.name,
       );
     }),
   );
@@ -51,11 +52,12 @@ async function bootstrap() {
   cbus._subscribe(
     new Subscriber<any>(e => {
       clogger.log(
-        // `${inspect(e)}`,
-        e.__proto__.constructor.name,
+        `${inspect(e)}`,
+        // e.__proto__.constructor.name,
       );
     }),
   );
+
 
   app.get(EventBus).publish(new MicroserviceStartedEvent());
 }

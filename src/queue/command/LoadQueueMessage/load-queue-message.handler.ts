@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QueueMessageModel } from 'queue/model/queue-message.model';
 import { Repository } from 'typeorm';
 import { QueueMessageLoadedEvent } from 'queue/event/queue-message-loaded.event';
+import { QueueMessageSyncRepository } from 'queue/repository/queue-message-sync.repository';
+import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
 
 @CommandHandler(LoadQueueMessageCommand)
 export class LoadQueueMessageHandler
@@ -14,6 +16,7 @@ export class LoadQueueMessageHandler
   constructor(
     @InjectRepository(QueueMessageModel)
     private readonly queueMessageModelRepository: Repository<QueueMessageModel>,
+    private readonly qmRep: QueueMessageSyncRepository,
     private readonly ebus: EventBus,
   ) {}
 
@@ -21,8 +24,9 @@ export class LoadQueueMessageHandler
     const qm = await this.queueMessageModelRepository.findOne({
       mode: command.mode,
     });
-
     if (qm) {
+      const q = new QueueMessageSyncModel(qm.mode, qm.messageID, qm.channelID);
+      await this.qmRep.save(q.mode, q);
       this.ebus.publish(
         new QueueMessageLoadedEvent(qm.mode, qm.channelID, qm.messageID),
       );
