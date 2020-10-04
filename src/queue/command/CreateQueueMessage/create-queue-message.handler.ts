@@ -4,9 +4,10 @@ import { QueueMessageModel } from 'queue/model/queue-message.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
-import { Client, MessageOptions, TextChannel } from 'discord.js';
+import { Client, Message, MessageOptions, TextChannel } from 'discord.js';
 import { QueueMessageCreatedEvent } from 'queue/event/queue-message-created.event';
 import { CreateQueueMessageCommand } from 'queue/command/CreateQueueMessage/create-queue-message.command';
+import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
 
 @CommandHandler(CreateQueueMessageCommand)
 export class CreateQueueMessageHandler
@@ -54,6 +55,10 @@ export class CreateQueueMessageHandler
     this.ebus.publish(
       new QueueMessageCreatedEvent(mode, channelID, qm.messageID),
     );
+  }
+
+  private async listenReactions(qm: QueueMessageSyncModel, msg: Message) {
+
   }
 
   private getQueueMessage(mode: MatchmakingMode): MessageOptions | string {

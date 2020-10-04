@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { EventPublisher } from '@nestjs/cqrs';
+import { EventBus, EventPublisher } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
 import { REDIS_URL } from 'config/env';
 import { Logger } from '@nestjs/common';
+import { MicroserviceStartedEvent } from 'queue/event/microservice-started.event';
 
 require('dotenv').config();
 
@@ -30,5 +31,7 @@ async function bootstrap() {
 
   const publisher = app.get(EventPublisher);
   prepareModels(publisher);
+
+  app.get(EventBus).publish(new MicroserviceStartedEvent())
 }
 bootstrap();

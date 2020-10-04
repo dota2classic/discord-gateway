@@ -34,7 +34,6 @@ import { DiscordProviders } from 'discord';
   providers: [
     ClientProvider,
     GuildProvider,
-
     GatewayService,
     AppService,
     ...QueueProviders,
