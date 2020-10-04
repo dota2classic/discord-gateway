@@ -3,7 +3,8 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { EventPublisher } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
-import { DISCORD_GATEWAY_HOST, REDIS_URL } from 'config/env';
+import { REDIS_URL } from 'config/env';
+import { Logger } from '@nestjs/common';
 
 require('dotenv').config();
 
@@ -23,7 +24,9 @@ async function bootstrap() {
       },
     },
   );
-  app.listen(() => console.log('Microservice is listening'));
+
+  await app.listenAsync();
+  new Logger(`DiscordGateway`).log(`Started microservice`)
 
   const publisher = app.get(EventPublisher);
   prepareModels(publisher);

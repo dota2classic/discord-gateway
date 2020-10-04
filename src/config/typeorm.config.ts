@@ -4,13 +4,17 @@ export const Entities = [
   QueueMessageModel
 ]
 export const devDbConfig: any = {
-  type: 'sqlite',
-  database: ':memory:',
+  type: 'postgres',
+  database: 'postgres',
+  host: 'localhost',
+  port: 5432,
+  username: 'postgres',
+  password: 'docker',
   entities: Entities,
   synchronize: true,
+
   keepConnectionAlive: true,
 };
-
 
 export const testDbConfig: any = {
   type: 'sqlite',

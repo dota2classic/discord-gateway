@@ -16,9 +16,6 @@ export const ClientProvider = {
     const client = new Client();
 
     const logger = new Logger(Client.name);
-
-    await client.login(DISCORD_API_TOKEN());
-
     let resolve: () => void;
     const readyPromise = new Promise(r => {
       resolve = r;
@@ -32,6 +29,12 @@ export const ClientProvider = {
       logger.log('Client ready and operating.');
       resolve();
     });
+
+    logger.log(`Logging in...`);
+    await client.login(DISCORD_API_TOKEN());
+    logger.log(`Logged in.`);
+
+    logger.log(`Waiting ready event...`);
 
     await readyPromise;
 

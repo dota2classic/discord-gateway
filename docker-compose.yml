@@ -4,6 +4,8 @@ services:
     container_name: discord-gateway-db
     image: postgres
     restart: always
+    env_file:
+      - .env
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
