@@ -9,13 +9,13 @@ import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
 export class GatewayController {
   constructor(private readonly ebus: EventBus) {}
 
-  private readonly logger = new Logger(GatewayController.name)
+  private readonly logger = new Logger(GatewayController.name);
 
   private event<T>(constructor: Constructor<T>, data: any) {
     const buff = data;
     buff.__proto__ = constructor.prototype;
     this.ebus.publish(buff);
-    this.logger.log(inspect(buff))
+    this.logger.log(inspect(buff));
   }
 
   @EventPattern('QueueUpdatedEvent')
@@ -25,6 +25,7 @@ export class GatewayController {
 
   @EventPattern('QueueCreatedEvent')
   async QueueCreatedEvent(data: QueueCreatedEvent) {
-      this.event(QueueCreatedEvent, data);
+    this.event(QueueCreatedEvent, data);
+    this.event(QueueUpdatedEvent, data);
   }
 }
