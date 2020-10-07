@@ -1,10 +1,4 @@
-import {
-  CommandBus,
-  EventBus,
-  EventPublisher,
-  IEvent,
-  QueryBus,
-} from '@nestjs/cqrs';
+import { CommandBus, EventBus, EventPublisher, IEvent, QueryBus } from '@nestjs/cqrs';
 import { Provider } from '@nestjs/common';
 import { RuntimeRepository } from 'config/runtime-repository';
 import { MockGuild } from '@test/client-mock';
@@ -63,6 +57,8 @@ export class DiscordServiceMockClass {
       msg.content = messages.queueMessage(mode, entries);
     },
   );
+
+  listenReactions = jest.fn();
 }
 
 export const DiscordServiceMock = {

@@ -198,14 +198,14 @@ export default class MockDiscord {
 export const MockClient = {
   provide: Client,
   useFactory: async () => {
-    return new MockDiscord();
+    return jest.fn()
   },
 };
 
 export const MockGuild = {
   provide: Guild,
   useFactory: async (cl: Client) => {
-    return cl.guilds.cache.first();
+    return jest.fn();
   },
   inject: [Client],
 };
