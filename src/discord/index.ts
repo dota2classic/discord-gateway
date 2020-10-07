@@ -4,6 +4,7 @@ import { ListenQueueMessageHandler } from 'discord/command/ListenQueueMessage/li
 import { EmojiService } from 'discord/emoji.service';
 import { QueueUpdatedHandler } from 'discord/event-handler/queue-updated.handler';
 import { UpdateQueueMessageHandler } from 'discord/command/UpdateQueueMessage/update-queue-message.handler';
+import { DiscordService } from 'discord/discord.service';
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [QueueUpdatedHandler];
@@ -14,4 +15,5 @@ export const DiscordProviders = [
   ...Sagas,
   ...EventHandlers,
   EmojiService,
+  DiscordService
 ];

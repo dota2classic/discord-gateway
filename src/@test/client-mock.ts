@@ -1,4 +1,13 @@
-import { Channel, Client, Guild, GuildChannel, GuildMember, Message, TextChannel, User } from 'discord.js';
+import {
+  Channel,
+  Client,
+  Guild,
+  GuildChannel,
+  GuildMember,
+  Message,
+  TextChannel,
+  User,
+} from 'discord.js';
 
 export default class MockDiscord {
   private client!: Client;
@@ -15,9 +24,10 @@ export default class MockDiscord {
       fetch: id => {
         const ch = this.channel;
         return {
-          send: content => (Promise.resolve({
-            id: 'testid',
-          })),
+          send: content =>
+            Promise.resolve({
+              id: 'testid',
+            }),
         };
       },
     };
@@ -190,4 +200,12 @@ export const MockClient = {
   useFactory: async () => {
     return new MockDiscord();
   },
+};
+
+export const MockGuild = {
+  provide: Guild,
+  useFactory: async (cl: Client) => {
+    return cl.guilds.cache.first();
+  },
+  inject: [Client],
 };

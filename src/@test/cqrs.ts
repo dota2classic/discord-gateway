@@ -1,8 +1,18 @@
-import { CommandBus, EventBus, EventPublisher, IEvent, QueryBus } from '@nestjs/cqrs';
+import {
+  CommandBus,
+  EventBus,
+  EventPublisher,
+  IEvent,
+  QueryBus,
+} from '@nestjs/cqrs';
 import { Provider } from '@nestjs/common';
 import { RuntimeRepository } from 'config/runtime-repository';
-import { MockClient } from '@test/client-mock';
-import { Client } from 'discord.js';
+import { MockGuild } from '@test/client-mock';
+import { Snowflake } from 'discord.js';
+import { DiscordService } from 'discord/discord.service';
+import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
+import { QueueEntry } from 'discord/event/queue-update-received.event';
+import { messages } from 'util/i18n';
 
 const ebusProvider: Provider = {
   provide: EventBus,
@@ -30,7 +40,35 @@ export const TestEnvironment = () => [
   TestCommandBus(),
   TestQueryBus(),
   EventPublisher,
+  MockGuild,
 ];
+
+const mockMessage = {
+  content: undefined,
+};
+
+export class DiscordServiceMockClass {
+  getMessage = jest.fn(async (id: Snowflake, channelID: Snowflake) => {
+    return mockMessage;
+  });
+
+  updateQueueMessage = jest.fn(
+    async (
+      id: Snowflake,
+      channelId: Snowflake,
+      mode: MatchmakingMode,
+      entries: QueueEntry[],
+    ) => {
+      const msg = await this.getMessage(id, channelId);
+      msg.content = messages.queueMessage(mode, entries);
+    },
+  );
+}
+
+export const DiscordServiceMock = {
+  provide: DiscordService,
+  useClass: DiscordServiceMockClass,
+};
 
 export function clearRepositories() {
   // @ts-ignore
