@@ -2,7 +2,7 @@ import { CommandBus, CommandHandler, EventBus, ICommandHandler } from '@nestjs/c
 import { Logger } from '@nestjs/common';
 import { ListenQueueMessageCommand } from 'discord/command/ListenQueueMessage/listen-queue-message.command';
 import { Client } from 'discord.js';
-import { DiscordService } from 'discord/discord.service';
+import { DiscordService } from 'discord/service/discord.service';
 
 @CommandHandler(ListenQueueMessageCommand)
 export class ListenQueueMessageHandler

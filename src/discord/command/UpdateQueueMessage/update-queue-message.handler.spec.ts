@@ -10,7 +10,7 @@ import { QueueMessageSyncRepository } from 'queue/repository/queue-message-sync.
 import { Guild } from 'discord.js';
 import { UpdateQueueMessageCommand } from 'discord/command/UpdateQueueMessage/update-queue-message.command';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
-import { DiscordService } from 'discord/discord.service';
+import { DiscordService } from 'discord/service/discord.service';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
 import Mock = jest.Mock;
 

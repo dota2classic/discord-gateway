@@ -4,6 +4,8 @@ import { Constructor, EventBus } from '@nestjs/cqrs';
 import { inspect } from 'util';
 import { QueueCreatedEvent } from './gateway/events/queue-created.event';
 import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
+import {ReadyCheckStartedEvent} from "./gateway/events/ready-check-started.event";
+import { ReadyStateUpdatedEvent } from 'gateway/events/ready-state-updated.event';
 
 @Controller()
 export class GatewayController {
@@ -27,5 +29,15 @@ export class GatewayController {
   async QueueCreatedEvent(data: QueueCreatedEvent) {
     this.event(QueueCreatedEvent, data);
     this.event(QueueUpdatedEvent, data);
+  }
+
+  @EventPattern('ReadyCheckStartedEvent')
+  async ReadyCheckStartedEvent(data: ReadyCheckStartedEvent) {
+    this.event(ReadyCheckStartedEvent, data);
+  }
+
+  @EventPattern(ReadyStateUpdatedEvent.name)
+  async ReadyStateUpdatedEvent(data: ReadyStateUpdatedEvent) {
+    this.event(ReadyStateUpdatedEvent, data);
   }
 }

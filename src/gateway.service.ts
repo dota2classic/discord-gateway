@@ -1,6 +1,7 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { EventBus, QueryBus } from '@nestjs/cqrs';
+import {EventBus, ofType, QueryBus} from '@nestjs/cqrs';
+import { ReadyStateReceivedEvent } from './gateway/events/ready-state-received.event';
 
 @Injectable()
 export class GatewayService implements OnApplicationBootstrap {
@@ -12,5 +13,10 @@ export class GatewayService implements OnApplicationBootstrap {
 
   async onApplicationBootstrap() {
     await this.queryCore.connect();
+
+    const publicEvents: any[] = [ReadyStateReceivedEvent];
+    this.ebus
+      .pipe(ofType(...publicEvents))
+      .subscribe(t => this.queryCore.emit(t.constructor.name, t));
   }
 }

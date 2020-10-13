@@ -7,7 +7,7 @@ import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
 import { Client, MessageOptions, TextChannel } from 'discord.js';
 import { QueueMessageCreatedEvent } from 'queue/event/queue-message-created.event';
 import { CreateQueueMessageCommand } from 'queue/command/CreateQueueMessage/create-queue-message.command';
-import { messages } from 'util/i18n';
+import { I18nService } from '../../../discord/service/i18n.service';
 
 @CommandHandler(CreateQueueMessageCommand)
 export class CreateQueueMessageHandler
@@ -19,6 +19,7 @@ export class CreateQueueMessageHandler
     private readonly queueMessageModelRepository: Repository<QueueMessageModel>,
     private readonly client: Client,
     private readonly ebus: EventBus,
+    private readonly i18nService: I18nService,
   ) {}
 
   async execute({ mode, channel }: CreateQueueMessageCommand) {
@@ -49,12 +50,11 @@ export class CreateQueueMessageHandler
     const channel = (await this.client.channels.fetch(
       channelID,
     )) as TextChannel;
-    const msg = await channel.send(messages.queueMessage(mode, []));
+    const msg = await channel.send(this.i18nService.queueMessage(mode, []));
     qm.messageID = msg.id;
     await this.queueMessageModelRepository.save(qm);
     this.ebus.publish(
       new QueueMessageCreatedEvent(mode, channelID, qm.messageID),
     );
   }
-
 }

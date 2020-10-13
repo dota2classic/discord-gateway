@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { UpdateQueueMessageCommand } from 'discord/command/UpdateQueueMessage/update-queue-message.command';
 import { QueueMessageSyncRepository } from 'queue/repository/queue-message-sync.repository';
-import { DiscordService } from 'discord/discord.service';
+import { DiscordService } from 'discord/service/discord.service';
 
 @CommandHandler(UpdateQueueMessageCommand)
 export class UpdateQueueMessageHandler

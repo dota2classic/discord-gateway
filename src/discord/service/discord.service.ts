@@ -2,11 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Client, MessageReaction, Snowflake, TextChannel, User } from 'discord.js';
 import { QueueEntry } from 'discord/event/queue-update-received.event';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
-import { messages } from 'util/i18n';
 import { PlayerEnterQueueCommand } from 'gateway/commands/player-enter-queue.command';
 import { PlayerLeaveQueueCommand } from 'gateway/commands/player-leave-queue.command';
-import { EmojiService } from 'discord/emoji.service';
+import { EmojiService } from 'discord/service/emoji.service';
 import { CommandBus } from '@nestjs/cqrs';
+import {I18nService} from "./i18n.service";
 
 @Injectable()
 export class DiscordService {
@@ -14,6 +14,7 @@ export class DiscordService {
     private readonly client: Client,
     private readonly emojiService: EmojiService,
     private readonly cbus: CommandBus,
+    private readonly i18nService: I18nService
   ) {}
 
   private readonly logger = new Logger(DiscordService.name);
@@ -31,7 +32,7 @@ export class DiscordService {
   ) {
     const msg = await this.getMessage(id, channelId);
 
-    await msg.edit(messages.queueMessage(mode, entries));
+    await msg.edit(this.i18nService.queueMessage(mode, entries));
   }
 
   public async listenReactions(

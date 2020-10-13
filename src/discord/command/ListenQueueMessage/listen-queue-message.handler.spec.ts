@@ -4,7 +4,7 @@ import { clearRepositories, DiscordServiceMock, TestEnvironment } from '@test/cq
 import { ListenQueueMessageHandler } from 'discord/command/ListenQueueMessage/listen-queue-message.handler';
 import { ListenQueueMessageCommand } from 'discord/command/ListenQueueMessage/listen-queue-message.command';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
-import { DiscordService } from 'discord/discord.service';
+import { DiscordService } from 'discord/service/discord.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { QueueMessageModel } from 'queue/model/queue-message.model';
 import { testDbConfig } from 'config/typeorm.config';

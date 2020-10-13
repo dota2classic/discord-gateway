@@ -8,11 +8,14 @@ import { Logger } from '@nestjs/common';
 import { MicroserviceStartedEvent } from 'queue/event/microservice-started.event';
 import { Subscriber } from 'rxjs';
 import { inspect } from 'util';
+import { ReadyCheckModel } from './discord/model/ready-check.model';
+import { DiscordMessageEvent } from './discord/event/discord-message.event';
 
 require('dotenv').config();
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);
+  publisher.mergeClassContext(ReadyCheckModel);
 }
 
 async function bootstrap() {
@@ -42,10 +45,9 @@ async function bootstrap() {
 
   ebus._subscribe(
     new Subscriber<any>(e => {
-      elogger.log(
-        `${inspect(e)}`,
-        // e.__proto__.constructor.name,
-      );
+      if (e.__proto__.constructor.name === DiscordMessageEvent.name)
+        elogger.log(e.__proto__.constructor.name);
+      else elogger.log(`${inspect(e)}`);
     }),
   );
 
@@ -57,7 +59,6 @@ async function bootstrap() {
       );
     }),
   );
-
 
   app.get(EventBus).publish(new MicroserviceStartedEvent());
 }

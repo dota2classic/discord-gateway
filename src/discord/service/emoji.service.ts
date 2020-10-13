@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { Client, Emoji, GuildEmoji } from 'discord.js';
-import { isDev } from 'config/env';
+import {Injectable} from '@nestjs/common';
+import {Client, GuildEmoji} from 'discord.js';
+import {isDev} from 'config/env';
 
 @Injectable()
 export class EmojiService {
@@ -9,8 +9,8 @@ export class EmojiService {
   private queueEmoji: GuildEmoji;
   private dequeueEmoji: GuildEmoji;
 
-  private static queueEmojiName = isDev ? "armlet" :  "pudge"
-  private static dequeueEmojiName = isDev ? "aegis" :  "krobelus"
+  private static queueEmojiName = isDev ? 'armlet' : 'pudge';
+  private static dequeueEmojiName = isDev ? 'aegis' : 'krobelus';
 
   public async getQueueEmoji(): Promise<GuildEmoji> {
     if (this.queueEmoji) return this.queueEmoji;
@@ -30,5 +30,13 @@ export class EmojiService {
     )!!)!!;
     this.dequeueEmoji = dequeueEmoji;
     return dequeueEmoji;
+  }
+
+  public getAcceptEmoji(): string {
+    return '✅';
+  }
+
+  public getDeclineEmoji(): string {
+    return '🚫';
   }
 }
