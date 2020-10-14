@@ -8,6 +8,7 @@ import {EmojiService} from '../../service/emoji.service';
 import {ROOM_READY_CHECK_ACCEPT_TIME} from '../../../gateway/constants/times';
 import {I18nService} from '../../service/i18n.service';
 import {ReadyState, ReadyStateReceivedEvent} from '../../../gateway/events/ready-state-received.event';
+import {DiscordUserRepository} from "../../repository/discord-user.repository";
 
 @CommandHandler(DeliverReadyCheckCommand)
 export class DeliverReadyCheckHandler
@@ -20,6 +21,7 @@ export class DeliverReadyCheckHandler
     private readonly emojiService: EmojiService,
     private readonly i18nService: I18nService,
     private readonly ebus: EventBus,
+    private readonly discordUserRepository: DiscordUserRepository
   ) {}
 
   async execute(command: DeliverReadyCheckCommand) {
@@ -103,7 +105,7 @@ export class DeliverReadyCheckHandler
         rc.readyState = ReadyState.TIMEOUT;
       }
       this.ebus.publish(
-        new ReadyStateReceivedEvent(rc.userId, rc.roomId, rc.readyState),
+        new ReadyStateReceivedEvent(this.discordUserRepository.get(rc.userId).playerId, rc.roomId, rc.readyState),
       );
       updateReadyState(rc.readyState);
     });

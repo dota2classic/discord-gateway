@@ -4,6 +4,7 @@ import { QueueEntry } from '../event/queue-update-received.event';
 import { Client, MessageEmbed, MessageOptions } from 'discord.js';
 import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
 import { ReadyState } from '../../gateway/events/ready-state-received.event';
+import { DiscordUserRepository } from '../repository/discord-user.repository';
 
 export const RoomSizes: { [key in MatchmakingMode]: number } = {
   [MatchmakingMode.SOLOMID]: 2,
@@ -22,7 +23,10 @@ export const Names = {
 
 @Injectable()
 export class I18nService {
-  constructor(private readonly client: Client) {}
+  constructor(
+    private readonly client: Client,
+    private readonly discordUserRepository: DiscordUserRepository,
+  ) {}
   public queueMessage(
     mode: MatchmakingMode,
     players: QueueEntry[],
@@ -35,7 +39,7 @@ export class I18nService {
         `${players
           .map(
             (it, index) =>
-              `     ${index + 1} **${it.isDiscord ? `<@${it.id}>` : it.id}**\n`,
+              `     ${index + 1} **${it.isDiscord ? `<@${this.discordUserRepository.findByPlayerId(it.id)?.discordId}>` : it.id}**\n`,
           )
           .join('\n')}`,
       );

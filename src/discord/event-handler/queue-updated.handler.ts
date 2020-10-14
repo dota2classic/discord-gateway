@@ -7,6 +7,7 @@ import {
   QueueEntry,
   QueueUpdateReceivedEvent,
 } from 'discord/event/queue-update-received.event';
+import {DiscordUserRepository} from "../repository/discord-user.repository";
 
 @EventsHandler(QueueUpdatedEvent)
 export class QueueUpdatedHandler implements IEventHandler<QueueUpdatedEvent> {
@@ -15,6 +16,7 @@ export class QueueUpdatedHandler implements IEventHandler<QueueUpdatedEvent> {
     private guild: Guild,
     private readonly ebus: EventBus,
     private readonly qbus: QueryBus,
+    private readonly discordUserRepository: DiscordUserRepository
   ) {
     // ok lets try it.
   }
@@ -29,11 +31,12 @@ export class QueueUpdatedHandler implements IEventHandler<QueueUpdatedEvent> {
       t.players.forEach(z => {
         entries.push({
           id: z,
-          isDiscord: !!this.client.users.cache.find(t => t.id === z),
+          isDiscord: !!this.discordUserRepository.findByPlayerId(z)
         });
       });
     });
 
+    console.log(entries)
     this.ebus.publish(new QueueUpdateReceivedEvent(event.mode, entries));
   }
 }

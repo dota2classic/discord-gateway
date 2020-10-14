@@ -11,29 +11,33 @@ export abstract class RuntimeRepository<
 > {
   protected cache = new Map<Key, T>();
 
+  protected get values(){
+    return [...this.cache.values()]
+  }
+
   protected constructor(protected readonly publisher: EventPublisher) {
     RuntimeRepository.list.push(this)
   }
 
-  get = async (id: Key): Promise<T | null> => {
+  get = (id: Key): T | null => {
     const t = this.cache.get(id) || null;
     if (t) this.publisher.mergeObjectContext(t);
     return t;
   };
 
-  save = async (id: Key, item: T) => {
+  save = (id: Key, item: T) => {
     this.publisher.mergeObjectContext(item);
     this.cache.set(id, item);
   };
 
-  update = async (id: Key, item: T) => {
+  update = (id: Key, item: T) => {
     this.cache.set(id, item);
   };
-  delete = async (id: Key) => {
+  delete = (id: Key) => {
     this.cache.delete(id);
   };
 
-  all = async () => [...this.cache.values()];
+  all = () => [...this.cache.values()];
 
   debugLog = () => {
     new Logger(RuntimeRepository.name).log(inspect([...this.cache.values()]));

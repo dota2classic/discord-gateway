@@ -10,11 +10,15 @@ import { Subscriber } from 'rxjs';
 import { inspect } from 'util';
 import { ReadyCheckModel } from './discord/model/ready-check.model';
 import { DiscordMessageEvent } from './discord/event/discord-message.event';
+import {DiscordUserModel} from "./discord/model/discord-user.model";
+import {DiscordUserRepository} from "./discord/repository/discord-user.repository";
+import {PlayerId} from "./gateway/shared-types/player-id";
 
 require('dotenv').config();
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);
+  publisher.mergeClassContext(DiscordUserModel);
   publisher.mergeClassContext(ReadyCheckModel);
 }
 
@@ -31,8 +35,17 @@ async function bootstrap() {
     },
   );
 
+
+  // mock data
+  const rep = app.get(DiscordUserRepository)
+  rep.save('318014316874039306', new DiscordUserModel('318014316874039306', new PlayerId('[U:1:22202]')))
+  rep.save('726942936037851158', new DiscordUserModel('726942936037851158', new PlayerId('[U:1:22203]')))
+
   await app.listenAsync();
   new Logger(`DiscordGateway`).log(`Started microservice`);
+
+
+
 
   const publisher = app.get(EventPublisher);
   prepareModels(publisher);

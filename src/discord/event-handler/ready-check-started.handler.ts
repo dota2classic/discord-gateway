@@ -1,8 +1,13 @@
-import {CommandBus, EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {ReadyCheckStartedEvent} from "../../gateway/events/ready-check-started.event";
-import {Client} from "discord.js";
-import {ReadyCheckService} from "../service/ready-check.service";
-import {DeliverReadyCheckCommand} from "../command/DeliverReadyCheck/deliver-ready-check.command";
+import {
+  CommandBus,
+  EventBus,
+  EventsHandler,
+  IEventHandler,
+} from '@nestjs/cqrs';
+import { ReadyCheckStartedEvent } from '../../gateway/events/ready-check-started.event';
+import { Client } from 'discord.js';
+import { DeliverReadyCheckCommand } from '../command/DeliverReadyCheck/deliver-ready-check.command';
+import {DiscordUserRepository} from "../repository/discord-user.repository";
 
 @EventsHandler(ReadyCheckStartedEvent)
 export class ReadyCheckStartedHandler
@@ -11,12 +16,19 @@ export class ReadyCheckStartedHandler
     private client: Client,
     private readonly cbus: CommandBus,
     private readonly ebus: EventBus,
+    private readonly discordUserRepository: DiscordUserRepository
   ) {}
 
   async handle(event: ReadyCheckStartedEvent) {
-    const discordUsers = event.entries.filter(t =>
-      this.client.users.cache.get(t.playerId),
-    );
+    const discordUsers = (
+      await Promise.all(
+        event.entries.map(async t => ({
+          entry: t,
+          discordId: await this.discordUserRepository.findByPlayerId(t.playerId),
+        })),
+      )
+    ).filter(t => !!t.discordId);
+
 
     // ok we launch commands
     discordUsers.forEach(t =>
@@ -24,7 +36,7 @@ export class ReadyCheckStartedHandler
         new DeliverReadyCheckCommand(
           event.mode,
           event.roomId,
-          t.playerId,
+          t.discordId.discordId,
           event.entries,
           event.state,
         ),
