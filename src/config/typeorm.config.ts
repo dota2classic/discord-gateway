@@ -1,4 +1,5 @@
 import { QueueMessageModel } from 'queue/model/queue-message.model';
+import {DB_HOST, DB_PASSWORD, DB_USERNAME} from "./env";
 
 export const Entities = [
   QueueMessageModel
@@ -27,12 +28,11 @@ export const testDbConfig: any = {
 export const prodDbConfig: any = {
   type: 'postgres',
   database: 'postgres',
-  host: 'discord-gateway-db',
+  host: DB_HOST(),
   port: 5432,
-  username: 'postgres',
-  password: 'tododododoood',
+  username: DB_USERNAME(),
+  password: DB_PASSWORD(),
   entities: Entities,
   synchronize: true,
-
   ssl: false,
 };

@@ -11,6 +11,7 @@ import { ClientProvider, GuildProvider } from 'config/discord.provider';
 import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'config/env';
 import { DiscordProviders } from 'discord';
 
+
 @Module({
   imports: [
     CqrsModule,

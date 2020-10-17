@@ -14,7 +14,6 @@ import {DiscordUserModel} from "./discord/model/discord-user.model";
 import {DiscordUserRepository} from "./discord/repository/discord-user.repository";
 import {PlayerId} from "./gateway/shared-types/player-id";
 
-require('dotenv').config();
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);

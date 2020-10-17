@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-  db:
+  discord-db:
     container_name: discord-gateway-db
     image: postgres
     restart: always
@@ -10,9 +10,19 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 0.0.0.0:5432:5432
+  match-db:
+    container_name: dota2db
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./match-storage:/var/lib/postgresql/data
+    ports:
+      - 0.0.0.0:5400:5432
   discord:
     depends_on:
-      - db
+      - discord-db
       - redis
     container_name: discord-gateway
     image: dota2classic/matchmaking:discord-gateway
@@ -22,8 +32,6 @@ services:
       - CORE_GATEWAY_HOST=core
       - DISCORD_GATEWAY_HOST=discord
       - REDIS_URL=redis://redis:6379
-    ports:
-      - 0.0.0.0:5001:5001
   core:
     depends_on:
       - redis
