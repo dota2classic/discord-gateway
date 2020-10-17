@@ -1,19 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { CommandBus, EventBus, EventPublisher } from '@nestjs/cqrs';
+import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
 import { REDIS_URL } from 'config/env';
-import { Logger } from '@nestjs/common';
+import { INestMicroservice, Logger } from '@nestjs/common';
 import { MicroserviceStartedEvent } from 'queue/event/microservice-started.event';
 import { Subscriber } from 'rxjs';
 import { inspect } from 'util';
 import { ReadyCheckModel } from './discord/model/ready-check.model';
 import { DiscordMessageEvent } from './discord/event/discord-message.event';
-import {DiscordUserModel} from "./discord/model/discord-user.model";
-import {DiscordUserRepository} from "./discord/repository/discord-user.repository";
-import {PlayerId} from "./gateway/shared-types/player-id";
-
+import { DiscordUserModel } from './discord/model/discord-user.model';
+import { DiscordUserRepository } from './discord/repository/discord-user.repository';
+import { GetAllConnectionsQuery } from './gateway/queries/GetAllConnections/get-all-connections.query';
+import { UserConnection } from './gateway/shared-types/user-connection';
+import { GetAllConnectionsQueryResult } from './gateway/queries/GetAllConnections/get-all-connections-query.result';
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);
@@ -21,6 +22,23 @@ export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(ReadyCheckModel);
 }
 
+async function initRuntimeData(app: INestMicroservice) {
+  const qbus = app.get(QueryBus);
+  const discordUserRepository = app.get(DiscordUserRepository);
+
+  const cons = await qbus.execute<
+    GetAllConnectionsQuery,
+    GetAllConnectionsQueryResult
+  >(new GetAllConnectionsQuery(UserConnection.DISCORD));
+
+  console.log(`Received ${cons.entries.length} entries`);
+  cons.entries.forEach(t => {
+    discordUserRepository.save(
+      t.externalId,
+      new DiscordUserModel(t.externalId, t.id),
+    );
+  });
+}
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
@@ -34,17 +52,10 @@ async function bootstrap() {
     },
   );
 
-
-  // mock data
-  const rep = app.get(DiscordUserRepository)
-  rep.save('318014316874039306', new DiscordUserModel('318014316874039306', new PlayerId('[U:1:22202]')))
-  rep.save('726942936037851158', new DiscordUserModel('726942936037851158', new PlayerId('[U:1:22203]')))
-
   await app.listenAsync();
   new Logger(`DiscordGateway`).log(`Started microservice`);
 
-
-
+  await initRuntimeData(app);
 
   const publisher = app.get(EventPublisher);
   prepareModels(publisher);

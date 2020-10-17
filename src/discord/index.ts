@@ -1,18 +1,19 @@
-import {CommandsSaga} from 'discord/saga/commands.saga';
-import {DiscordSaga} from 'discord/saga/discord.saga';
-import {ListenQueueMessageHandler} from 'discord/command/ListenQueueMessage/listen-queue-message.handler';
-import {EmojiService} from 'discord/service/emoji.service';
-import {QueueUpdatedHandler} from 'discord/event-handler/queue-updated.handler';
-import {UpdateQueueMessageHandler} from 'discord/command/UpdateQueueMessage/update-queue-message.handler';
-import {DiscordService} from 'discord/service/discord.service';
-import {DeliverReadyCheckHandler} from './command/DeliverReadyCheck/deliver-ready-check.handler';
-import {ReadyCheckRepository} from './repository/ready-check.repository';
-import {ReadyCheckStartedHandler} from './event-handler/ready-check-started.handler';
-import {ReadyCheckService} from './service/ready-check.service';
-import {ReadyStateUpdatedHandler} from './event-handler/ready-state-updated.handler';
-import {DiscordUserRepository} from "./repository/discord-user.repository";
-import {DiscordEnterQueueHandler} from "./event-handler/discord-enter-queue.handler";
-import {DiscordLeaveQueueHandler} from "./event-handler/discord-leave-queue.handler";
+import { CommandsSaga } from 'discord/saga/commands.saga';
+import { DiscordSaga } from 'discord/saga/discord.saga';
+import { ListenQueueMessageHandler } from 'discord/command/ListenQueueMessage/listen-queue-message.handler';
+import { EmojiService } from 'discord/service/emoji.service';
+import { QueueUpdatedHandler } from 'discord/event-handler/queue-updated.handler';
+import { UpdateQueueMessageHandler } from 'discord/command/UpdateQueueMessage/update-queue-message.handler';
+import { DiscordService } from 'discord/service/discord.service';
+import { DeliverReadyCheckHandler } from './command/DeliverReadyCheck/deliver-ready-check.handler';
+import { ReadyCheckRepository } from './repository/ready-check.repository';
+import { ReadyCheckStartedHandler } from './event-handler/ready-check-started.handler';
+import { ReadyCheckService } from './service/ready-check.service';
+import { ReadyStateUpdatedHandler } from './event-handler/ready-state-updated.handler';
+import { DiscordUserRepository } from './repository/discord-user.repository';
+import { DiscordEnterQueueHandler } from './event-handler/discord-enter-queue.handler';
+import { DiscordLeaveQueueHandler } from './event-handler/discord-leave-queue.handler';
+import { UserConnectionCreatedHandler } from './event-handler/user-connection-created.event';
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -20,7 +21,8 @@ const EventHandlers = [
   ReadyStateUpdatedHandler,
   ReadyCheckStartedHandler,
   DiscordEnterQueueHandler,
-  DiscordLeaveQueueHandler
+  DiscordLeaveQueueHandler,
+  UserConnectionCreatedHandler,
 ];
 const Repositories = [ReadyCheckRepository, DiscordUserRepository];
 

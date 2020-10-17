@@ -7,7 +7,7 @@ import {
 import { ReadyCheckStartedEvent } from '../../gateway/events/ready-check-started.event';
 import { Client } from 'discord.js';
 import { DeliverReadyCheckCommand } from '../command/DeliverReadyCheck/deliver-ready-check.command';
-import {DiscordUserRepository} from "../repository/discord-user.repository";
+import { DiscordUserRepository } from '../repository/discord-user.repository';
 
 @EventsHandler(ReadyCheckStartedEvent)
 export class ReadyCheckStartedHandler
@@ -16,7 +16,7 @@ export class ReadyCheckStartedHandler
     private client: Client,
     private readonly cbus: CommandBus,
     private readonly ebus: EventBus,
-    private readonly discordUserRepository: DiscordUserRepository
+    private readonly discordUserRepository: DiscordUserRepository,
   ) {}
 
   async handle(event: ReadyCheckStartedEvent) {
@@ -24,11 +24,12 @@ export class ReadyCheckStartedHandler
       await Promise.all(
         event.entries.map(async t => ({
           entry: t,
-          discordId: await this.discordUserRepository.findByPlayerId(t.playerId),
+          discordId: await this.discordUserRepository.findByPlayerId(
+            t.playerId,
+          ),
         })),
       )
     ).filter(t => !!t.discordId);
-
 
     // ok we launch commands
     discordUsers.forEach(t =>
