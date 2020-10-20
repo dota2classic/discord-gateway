@@ -94,6 +94,7 @@ export class I18nService {
         `Команды: \n${teams}\n
         РЕХОСТ? Оставьте реакцию :poop: на это сообщение в случае неудачного присоединения игроков, чтобы перезапустить сервер`,
       )
+      .addField('ID матча', matchId)
       .addField('Режим', formatGameMode(info.mode))
       .addField('Смотреть игру', `steam://connect/${gs.watchURL}`);
     // .addField('Голосов для рехоста', `${votes} из ${votesToRehost}`);

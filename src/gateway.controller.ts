@@ -7,6 +7,7 @@ import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
 import {ReadyCheckStartedEvent} from "./gateway/events/ready-check-started.event";
 import { ReadyStateUpdatedEvent } from 'gateway/events/ready-state-updated.event';
 import {MatchStartedEvent} from "./gateway/events/match-started.event";
+import { MatchFinishedEvent } from 'gateway/events/match-finished.event';
 
 @Controller()
 export class GatewayController {
@@ -45,5 +46,10 @@ export class GatewayController {
   @EventPattern(MatchStartedEvent.name)
   async MatchStartedEvent(data: MatchStartedEvent) {
     this.event(MatchStartedEvent, data);
+  }
+
+  @EventPattern(MatchFinishedEvent.name)
+  async MatchFinishedEvent(data: MatchFinishedEvent) {
+    this.event(MatchFinishedEvent, data);
   }
 }
