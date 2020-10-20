@@ -1,8 +1,10 @@
 import { QueueMessageModel } from 'queue/model/queue-message.model';
 import {DB_HOST, DB_PASSWORD, DB_USERNAME} from "./env";
+import {ChannelModel} from "../discord/model/channel.model";
 
 export const Entities = [
-  QueueMessageModel
+  QueueMessageModel,
+  ChannelModel
 ]
 export const devDbConfig: any = {
   type: 'postgres',
