@@ -31,6 +31,7 @@ async function initRuntimeData(app: INestMicroservice) {
     GetAllConnectionsQueryResult
   >(new GetAllConnectionsQuery(UserConnection.DISCORD));
 
+
   console.log(`Received ${cons.entries.length} entries`);
   cons.entries.forEach(t => {
     discordUserRepository.save(
@@ -39,6 +40,7 @@ async function initRuntimeData(app: INestMicroservice) {
     );
   });
 }
+
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
@@ -84,5 +86,7 @@ async function bootstrap() {
   );
 
   app.get(EventBus).publish(new MicroserviceStartedEvent());
+  console.log(`?`)
+
 }
 bootstrap();

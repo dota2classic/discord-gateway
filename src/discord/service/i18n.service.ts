@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { MatchmakingMode } from '../../gateway/shared-types/matchmaking-mode';
-import { QueueEntry } from '../event/queue-update-received.event';
-import { Client, MessageEmbed, MessageOptions } from 'discord.js';
-import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
-import { ReadyState } from '../../gateway/events/ready-state-received.event';
-import { DiscordUserRepository } from '../repository/discord-user.repository';
+import {Injectable} from '@nestjs/common';
+import {MatchmakingMode} from '../../gateway/shared-types/matchmaking-mode';
+import {QueueEntry} from '../event/queue-update-received.event';
+import {Client, MessageEmbed, MessageOptions} from 'discord.js';
+import {RoomReadyState} from '../../gateway/events/room-ready-check-complete.event';
+import {ReadyState} from '../../gateway/events/ready-state-received.event';
+import {DiscordUserRepository} from '../repository/discord-user.repository';
+import {MatchInfo} from "../../gateway/events/room-ready.event";
+import {PlayerId} from "../../gateway/shared-types/player-id";
+import formatGameMode from "../../gateway/util/formatGameMode";
+import {GameServerInfo} from "../../gateway/shared-types/game-server-info";
 
 export const RoomSizes: { [key in MatchmakingMode]: number } = {
   [MatchmakingMode.SOLOMID]: 2,
   [MatchmakingMode.RANKED]: 10,
   [MatchmakingMode.UNRANKED]: 10,
+  [MatchmakingMode.DIRETIDE]: 10,
+  [MatchmakingMode.GREEVILING]: 10,
+  [MatchmakingMode.TOURNAMENT]: 10,
+  [MatchmakingMode.ABILITY_DRAFT]: 10,
 };
 
 export const Names = {
@@ -27,6 +35,16 @@ export class I18nService {
     private readonly client: Client,
     private readonly discordUserRepository: DiscordUserRepository,
   ) {}
+
+  private formatPlayer = (it: PlayerId) => {
+    const isDiscord = this.discordUserRepository.findByPlayerId(it);
+
+    if (isDiscord) {
+      return `<@${isDiscord.discordId}>`;
+    }
+
+    return it.value;
+  };
   public queueMessage(
     mode: MatchmakingMode,
     players: QueueEntry[],
@@ -39,7 +57,7 @@ export class I18nService {
         `${players
           .map(
             (it, index) =>
-              `     ${index + 1} **${it.isDiscord ? `<@${this.discordUserRepository.findByPlayerId(it.id)?.discordId}>` : it.id}**\n`,
+              `     ${index + 1} **${this.formatPlayer(it.id)}**\n`,
           )
           .join('\n')}`,
       );
@@ -65,5 +83,30 @@ export class I18nService {
       .addField('Режим', Names[mode])
       .addField('Приняли игру', `${state.accepted} / ${state.total}`)
       .addField('Ваш статус', ls);
+  }
+
+  liveMatch(info: MatchInfo, matchId: number, gs: GameServerInfo) {
+    const teams = this.constructTeams(info.radiant, info.dire);
+
+    return new MessageEmbed()
+      .setColor(10638079)
+      .setDescription(
+        `Команды: \n${teams}\n
+        РЕХОСТ? Оставьте реакцию :poop: на это сообщение в случае неудачного присоединения игроков, чтобы перезапустить сервер`,
+      )
+      .addField('Режим', formatGameMode(info.mode))
+      .addField('Смотреть игру', `steam://connect/${gs.watchURL}`);
+    // .addField('Голосов для рехоста', `${votes} из ${votesToRehost}`);
+  }
+
+  private constructTeams(radiant: PlayerId[], dire: PlayerId[]) {
+    if (radiant === undefined || dire === undefined) {
+      return ``;
+    }
+
+    return (
+      `**Свет**:\n${radiant.map(it => this.formatPlayer(it)).join('\n')}\n` +
+      `**Тьма**:\n${dire.map(it => this.formatPlayer(it)).join('\n')}`
+    );
   }
 }
