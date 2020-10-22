@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {MatchmakingMode} from '../../gateway/shared-types/matchmaking-mode';
+import {MatchmakingMode, RoomSizes} from '../../gateway/shared-types/matchmaking-mode';
 import {QueueEntry} from '../event/queue-update-received.event';
 import {Client, MessageEmbed, MessageOptions} from 'discord.js';
 import {RoomReadyState} from '../../gateway/events/room-ready-check-complete.event';
@@ -9,16 +9,6 @@ import {MatchInfo} from "../../gateway/events/room-ready.event";
 import {PlayerId} from "../../gateway/shared-types/player-id";
 import formatGameMode from "../../gateway/util/formatGameMode";
 import {GameServerInfo} from "../../gateway/shared-types/game-server-info";
-
-export const RoomSizes: { [key in MatchmakingMode]: number } = {
-  [MatchmakingMode.SOLOMID]: 2,
-  [MatchmakingMode.RANKED]: 10,
-  [MatchmakingMode.UNRANKED]: 10,
-  [MatchmakingMode.DIRETIDE]: 10,
-  [MatchmakingMode.GREEVILING]: 10,
-  [MatchmakingMode.TOURNAMENT]: 10,
-  [MatchmakingMode.ABILITY_DRAFT]: 10,
-};
 
 export const Names = {
   [MatchmakingMode.RANKED]: 'РЕЙТИНГ',
@@ -109,5 +99,18 @@ export class I18nService {
       `**Свет**:\n${radiant.map(it => this.formatPlayer(it)).join('\n')}\n` +
       `**Тьма**:\n${dire.map(it => this.formatPlayer(it)).join('\n')}`
     );
+  }
+
+  matchReady(info: MatchInfo, url: string) {
+    return new MessageEmbed()
+      .setDescription(
+        `Игра готова! \nКоманды: \n${this.constructTeams(
+          info.radiant,
+          info.dire,
+        )}`,
+      )
+      .setFooter("Перед тем как нажать на ссылку, откройте старый клиент")
+      .addField('Режим', formatGameMode(info.mode))
+      .addField('Играть', `steam://connect/${url}`);
   }
 }

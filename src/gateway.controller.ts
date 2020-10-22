@@ -8,6 +8,7 @@ import {ReadyCheckStartedEvent} from "./gateway/events/ready-check-started.event
 import { ReadyStateUpdatedEvent } from 'gateway/events/ready-state-updated.event';
 import {MatchStartedEvent} from "./gateway/events/match-started.event";
 import { MatchFinishedEvent } from 'gateway/events/match-finished.event';
+import {GameServerStartedEvent} from "./gateway/events/game-server-started.event";
 
 @Controller()
 export class GatewayController {
@@ -52,4 +53,10 @@ export class GatewayController {
   async MatchFinishedEvent(data: MatchFinishedEvent) {
     this.event(MatchFinishedEvent, data);
   }
+
+  @EventPattern(GameServerStartedEvent.name)
+  async GameServerStartedEvent(data: GameServerStartedEvent) {
+    this.event(GameServerStartedEvent, data);
+  }
+
 }

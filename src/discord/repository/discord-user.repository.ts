@@ -13,7 +13,7 @@ export class DiscordUserRepository extends RuntimeRepository<
     super(publisher);
   }
 
-  public findByPlayerId(pid: PlayerId) {
+  public findByPlayerId(pid: PlayerId): DiscordUserModel | undefined {
     return this.values.find(t => t.playerId.value === pid.value);
   }
 }

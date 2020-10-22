@@ -19,6 +19,7 @@ import {LiveMatchRepository} from "./repository/live-match.repository";
 import {MatchFinishedHandler} from "./event-handler/match-finished.handler";
 import {SetChannelHandler} from "./command/SetChannel/set-channel.handler";
 import {AnnounceMatchFinishedHandler} from "./event-handler/announce-match-finished.handler";
+import {GameServerStartedHandler} from "./event-handler/game-server-started.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -31,7 +32,8 @@ const EventHandlers = [
 
   MatchStartedHandler,
   MatchFinishedHandler,
-  AnnounceMatchFinishedHandler
+  AnnounceMatchFinishedHandler,
+  GameServerStartedHandler
 ];
 const Repositories = [
   ReadyCheckRepository,
