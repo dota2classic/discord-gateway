@@ -1,14 +1,17 @@
-import {Injectable} from '@nestjs/common';
-import {MatchmakingMode, RoomSizes} from '../../gateway/shared-types/matchmaking-mode';
-import {QueueEntry} from '../event/queue-update-received.event';
-import {Client, MessageEmbed, MessageOptions} from 'discord.js';
-import {RoomReadyState} from '../../gateway/events/room-ready-check-complete.event';
-import {ReadyState} from '../../gateway/events/ready-state-received.event';
-import {DiscordUserRepository} from '../repository/discord-user.repository';
-import {MatchInfo} from "../../gateway/events/room-ready.event";
-import {PlayerId} from "../../gateway/shared-types/player-id";
-import formatGameMode from "../../gateway/util/formatGameMode";
-import {GameServerInfo} from "../../gateway/shared-types/game-server-info";
+import { Injectable } from '@nestjs/common';
+import {
+  MatchmakingMode,
+  RoomSizes,
+} from '../../gateway/shared-types/matchmaking-mode';
+import { QueueEntry } from '../event/queue-update-received.event';
+import { Client, MessageEmbed, MessageOptions } from 'discord.js';
+import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
+import { ReadyState } from '../../gateway/events/ready-state-received.event';
+import { DiscordUserRepository } from '../repository/discord-user.repository';
+import { MatchInfo } from '../../gateway/events/room-ready.event';
+import { PlayerId } from '../../gateway/shared-types/player-id';
+import formatGameMode from '../../gateway/util/formatGameMode';
+import { GameServerInfo } from '../../gateway/shared-types/game-server-info';
 
 export const Names = {
   [MatchmakingMode.RANKED]: 'РЕЙТИНГ',
@@ -80,11 +83,7 @@ export class I18nService {
 
     return new MessageEmbed()
       .setColor(10638079)
-      .setDescription(
-        `Команды: \n${teams}\n
-        РЕХОСТ? Оставьте реакцию :poop: на это сообщение в случае неудачного присоединения игроков, чтобы перезапустить сервер`,
-      )
-      .addField('ID матча', matchId)
+      .setDescription(`${teams}`)
       .addField('Режим', formatGameMode(info.mode))
       .addField('Смотреть игру', `steam://connect/${gs.watchURL}`);
     // .addField('Голосов для рехоста', `${votes} из ${votesToRehost}`);
@@ -109,7 +108,7 @@ export class I18nService {
           info.dire,
         )}`,
       )
-      .setFooter("Перед тем как нажать на ссылку, откройте старый клиент")
+      .setFooter('Перед тем как нажать на ссылку, откройте старый клиент')
       .addField('Режим', formatGameMode(info.mode))
       .addField('Играть', `steam://connect/${url}`);
   }
