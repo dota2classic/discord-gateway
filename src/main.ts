@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
-import { REDIS_URL } from 'config/env';
+import {REDIS_PASSWORD, REDIS_URL} from 'config/env';
 import { INestMicroservice, Logger } from '@nestjs/common';
 import { MicroserviceStartedEvent } from 'queue/event/microservice-started.event';
 import { Subscriber } from 'rxjs';
@@ -50,6 +50,7 @@ async function bootstrap() {
         url: REDIS_URL(),
         retryAttempts: Infinity,
         retryDelay: 5000,
+        password: REDIS_PASSWORD(),
       },
     },
   );

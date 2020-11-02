@@ -56,6 +56,7 @@ export class DiscordService {
     await msg.react(deqEmoji);
 
     const filter = (reaction: MessageReaction, user: User) => {
+      console.log(reaction.emoji.id)
       return (
         // equal to play moji
         (qEmoji.id === reaction.emoji.id ||
@@ -70,6 +71,7 @@ export class DiscordService {
     // await preset reactions
 
     collector.addListener('collect', async (reaction, user: User) => {
+      console.log(reaction.emoji.id, qEmoji.id)
       if (reaction.emoji.id === qEmoji.id) {
         // this.ebus.publish(new DiscordEnterQueueEvent(qp, command.mode));
         // for now

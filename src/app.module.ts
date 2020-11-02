@@ -8,7 +8,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { devDbConfig, Entities, prodDbConfig } from 'config/typeorm.config';
 import { QueueProviders } from 'queue';
 import { ClientProvider, GuildProvider } from 'config/discord.provider';
-import { CORE_GATEWAY_HOST, isDev, REDIS_URL } from 'config/env';
+import {CORE_GATEWAY_HOST, isDev, REDIS_PASSWORD, REDIS_URL} from 'config/env';
 import { DiscordProviders } from 'discord';
 
 
@@ -27,6 +27,7 @@ import { DiscordProviders } from 'discord';
           url: REDIS_URL(),
           retryAttempts: Infinity,
           retryDelay: 5000,
+          password: REDIS_PASSWORD(),
         },
       },
     ] as any),
