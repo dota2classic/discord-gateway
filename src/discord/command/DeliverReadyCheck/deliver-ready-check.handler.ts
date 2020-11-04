@@ -26,13 +26,14 @@ export class DeliverReadyCheckHandler
 
   async execute(command: DeliverReadyCheckCommand) {
     const user = await this.client.users.resolve(command.discordID);
-    const msg = await user.send(
+    const msg = (await user.send(
       this.i18nService.readyCheck(
         command.mode,
         command.state,
         ReadyState.PENDING,
       ),
-    );
+    ))[0];
+
     const rc = new ReadyCheckModel(
       user.id,
       msg.id,

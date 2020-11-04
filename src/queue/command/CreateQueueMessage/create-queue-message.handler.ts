@@ -50,7 +50,7 @@ export class CreateQueueMessageHandler
     const channel = (await this.client.channels.fetch(
       channelID,
     )) as TextChannel;
-    const msg = await channel.send(this.i18nService.queueMessage(mode, []));
+    const msg = (await channel.send(this.i18nService.queueMessage(mode, [])))[0];
     qm.messageID = msg.id;
     await this.queueMessageModelRepository.save(qm);
     this.ebus.publish(

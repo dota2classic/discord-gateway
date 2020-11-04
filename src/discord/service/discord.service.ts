@@ -8,8 +8,6 @@ import {
 } from 'discord.js';
 import { QueueEntry } from 'discord/event/queue-update-received.event';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
-import { PlayerEnterQueueCommand } from 'gateway/commands/player-enter-queue.command';
-import { PlayerLeaveQueueCommand } from 'gateway/commands/player-leave-queue.command';
 import { EmojiService } from 'discord/service/emoji.service';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { I18nService } from './i18n.service';
@@ -30,7 +28,7 @@ export class DiscordService {
 
   public async getMessage(id: Snowflake, channelID: Snowflake) {
     const ch = (await this.client.channels.fetch(channelID)) as TextChannel;
-    return await ch.messages.fetch(id);
+    return ch.messages.fetch(id);
   }
 
   public async updateQueueMessage(
@@ -55,8 +53,8 @@ export class DiscordService {
     await msg.react(qEmoji);
     await msg.react(deqEmoji);
 
+
     const filter = (reaction: MessageReaction, user: User) => {
-      console.log(reaction.emoji.id)
       return (
         // equal to play moji
         (qEmoji.id === reaction.emoji.id ||
@@ -65,13 +63,15 @@ export class DiscordService {
       );
     };
 
+
+
     const collector = msg.createReactionCollector(filter, {
       dispose: true,
     });
-    // await preset reactions
 
-    collector.addListener('collect', async (reaction, user: User) => {
-      console.log(reaction.emoji.id, qEmoji.id)
+
+    collector.on('collect', async (reaction, user: User) => {
+      console.log(reaction.emoji.id, qEmoji.id);
       if (reaction.emoji.id === qEmoji.id) {
         // this.ebus.publish(new DiscordEnterQueueEvent(qp, command.mode));
         // for now
