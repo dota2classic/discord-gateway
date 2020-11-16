@@ -14,6 +14,8 @@ export class GameServerStartedHandler
   ) {}
 
   async handle(event: GameServerStartedEvent) {
+
+    await new Promise(r => setTimeout(r, 5000));
     const allPlayers = [...event.info.radiant].concat(event.info.dire);
     allPlayers.map(async t => {
       const dp = this.userRepo.findByPlayerId(t);
