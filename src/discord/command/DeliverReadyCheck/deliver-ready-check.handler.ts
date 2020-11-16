@@ -1,14 +1,14 @@
-import {CommandHandler, EventBus, ICommandHandler} from '@nestjs/cqrs';
-import {Logger} from '@nestjs/common';
-import {DeliverReadyCheckCommand} from './deliver-ready-check.command';
-import {Client, Collection, Message, MessageReaction, Snowflake, User,} from 'discord.js';
-import {ReadyCheckRepository} from '../../repository/ready-check.repository';
-import {ReadyCheckModel} from '../../model/ready-check.model';
-import {EmojiService} from '../../service/emoji.service';
-import {ROOM_READY_CHECK_ACCEPT_TIME} from '../../../gateway/constants/times';
-import {I18nService} from '../../service/i18n.service';
-import {ReadyState, ReadyStateReceivedEvent} from '../../../gateway/events/ready-state-received.event';
-import {DiscordUserRepository} from "../../repository/discord-user.repository";
+import { CommandHandler, EventBus, ICommandHandler } from "@nestjs/cqrs";
+import { Logger } from "@nestjs/common";
+import { DeliverReadyCheckCommand } from "./deliver-ready-check.command";
+import { Client, Collection, Message, MessageReaction, Snowflake, User } from "discord.js";
+import { ReadyCheckRepository } from "../../repository/ready-check.repository";
+import { ReadyCheckModel } from "../../model/ready-check.model";
+import { EmojiService } from "../../service/emoji.service";
+import { ROOM_READY_CHECK_ACCEPT_TIME } from "../../../gateway/constants/times";
+import { I18nService } from "../../service/i18n.service";
+import { ReadyState, ReadyStateReceivedEvent } from "../../../gateway/events/ready-state-received.event";
+import { DiscordUserRepository } from "../../repository/discord-user.repository";
 
 @CommandHandler(DeliverReadyCheckCommand)
 export class DeliverReadyCheckHandler
@@ -21,18 +21,18 @@ export class DeliverReadyCheckHandler
     private readonly emojiService: EmojiService,
     private readonly i18nService: I18nService,
     private readonly ebus: EventBus,
-    private readonly discordUserRepository: DiscordUserRepository
+    private readonly discordUserRepository: DiscordUserRepository,
   ) {}
 
   async execute(command: DeliverReadyCheckCommand) {
     const user = await this.client.users.resolve(command.discordID);
-    const msg = (await user.send(
+    const msg: Message = await user.send(
       this.i18nService.readyCheck(
         command.mode,
         command.state,
         ReadyState.PENDING,
       ),
-    ))[0];
+    ) as Message;
 
     const rc = new ReadyCheckModel(
       user.id,
@@ -106,7 +106,11 @@ export class DeliverReadyCheckHandler
         rc.readyState = ReadyState.TIMEOUT;
       }
       this.ebus.publish(
-        new ReadyStateReceivedEvent(this.discordUserRepository.get(rc.userId).playerId, rc.roomId, rc.readyState),
+        new ReadyStateReceivedEvent(
+          this.discordUserRepository.get(rc.userId).playerId,
+          rc.roomId,
+          rc.readyState,
+        ),
       );
       updateReadyState(rc.readyState);
     });

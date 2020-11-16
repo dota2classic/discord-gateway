@@ -44,7 +44,7 @@ export class I18nService {
   ): MessageOptions {
     return new MessageEmbed()
       .setColor('#0099ff')
-      .addField('Режим', Names[mode])
+      .addField('Режим', formatGameMode(mode))
       .addField('Игроков для игры', `${players.length} / ${RoomSizes[mode]}`)
       .setDescription(
         `${players
