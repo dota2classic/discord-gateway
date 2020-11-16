@@ -9,6 +9,7 @@ import { ROOM_READY_CHECK_ACCEPT_TIME } from "../../../gateway/constants/times";
 import { I18nService } from "../../service/i18n.service";
 import { ReadyState, ReadyStateReceivedEvent } from "../../../gateway/events/ready-state-received.event";
 import { DiscordUserRepository } from "../../repository/discord-user.repository";
+import { ACCEPT_GAME_TIMEOUT } from "../../../gateway/shared-types/timings";
 
 @CommandHandler(DeliverReadyCheckCommand)
 export class DeliverReadyCheckHandler
@@ -26,13 +27,13 @@ export class DeliverReadyCheckHandler
 
   async execute(command: DeliverReadyCheckCommand) {
     const user = await this.client.users.resolve(command.discordID);
-    const msg: Message = await user.send(
+    const msg: Message = (await user.send(
       this.i18nService.readyCheck(
         command.mode,
         command.state,
         ReadyState.PENDING,
       ),
-    ) as Message;
+    )) as Message;
 
     const rc = new ReadyCheckModel(
       user.id,
@@ -85,7 +86,7 @@ export class DeliverReadyCheckHandler
     const reactor = msg
       .awaitReactions(this.filter, {
         max: 1, // we need 1 reaction only
-        time: ROOM_READY_CHECK_ACCEPT_TIME,
+        time: ACCEPT_GAME_TIMEOUT,
         errors: ['time'],
       })
       .then(c => this.process(msg, user, c))
@@ -103,8 +104,9 @@ export class DeliverReadyCheckHandler
       } else if (t === this.emojiService.getDeclineEmoji()) {
         rc.readyState = ReadyState.DECLINE;
       } else {
-        rc.readyState = ReadyState.TIMEOUT;
+        return;
       }
+
       this.ebus.publish(
         new ReadyStateReceivedEvent(
           this.discordUserRepository.get(rc.userId).playerId,
