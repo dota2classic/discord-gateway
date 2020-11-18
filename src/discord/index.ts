@@ -20,6 +20,7 @@ import {MatchFinishedHandler} from "./event-handler/match-finished.handler";
 import {SetChannelHandler} from "./command/SetChannel/set-channel.handler";
 import {AnnounceMatchFinishedHandler} from "./event-handler/announce-match-finished.handler";
 import {GameServerStartedHandler} from "./event-handler/game-server-started.handler";
+import { RoomNotReadyHandler } from "./event-handler/room-not-ready.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -33,7 +34,9 @@ const EventHandlers = [
   MatchStartedHandler,
   MatchFinishedHandler,
   AnnounceMatchFinishedHandler,
-  GameServerStartedHandler
+  GameServerStartedHandler,
+
+  RoomNotReadyHandler
 ];
 const Repositories = [
   ReadyCheckRepository,

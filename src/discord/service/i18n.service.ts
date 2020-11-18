@@ -112,4 +112,8 @@ export class I18nService {
       .addField('Режим', formatGameMode(info.mode))
       .addField('Играть', `steam://connect/${url}`);
   }
+
+  roomNotReady() {
+    return `Кто-то не принял игру.`
+  }
 }
