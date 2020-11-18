@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { filter, map, tap } from 'rxjs/operators';
 import { EventBus, ICommand, ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
-import { Client, Message } from 'discord.js';
+import { Client, Message, Snowflake } from "discord.js";
 import { DiscordMessageEvent } from 'discord/event/discord-message.event';
 import { CreateQueueMessageCommand } from 'queue/command/CreateQueueMessage/create-queue-message.command';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
@@ -10,6 +10,7 @@ import { SetChannelCommand } from '../command/SetChannel/set-channel.command';
 import { ChannelType } from '../model/channel.model';
 import { PrintPartyCommand } from '../command/PrintParty/print-party.command';
 import { LeavePartyCommand } from "../command/LeaveParty/leave-party.command";
+import { InviteToPartyCommand } from "../command/InviteToParty/invite-to-party.command";
 
 const commandDeletion = tap<DiscordMessageEvent>(it =>
   it.message
@@ -75,6 +76,19 @@ export class CommandsSaga {
       filter(it => it.message.cleanContent.startsWith('!unparty')),
       commandDeletion,
       map(it => new LeavePartyCommand(it.message.author.id)),
+    );
+  };
+
+  @Saga()
+  inviteToParty = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      filter(it => it.message.cleanContent.startsWith('!invite')),
+      commandDeletion,
+      map(it => {
+        const invited: Snowflake | undefined = [...it.message.mentions.users.values()].map(t => t.id)[0]
+        return new InviteToPartyCommand(it.message.author.id, invited)
+      }),
     );
   };
 }

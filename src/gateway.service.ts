@@ -4,6 +4,7 @@ import { EventBus, ofType, QueryBus } from '@nestjs/cqrs';
 import { ReadyStateReceivedEvent } from './gateway/events/ready-state-received.event';
 import { PartyInviteAcceptedEvent } from './gateway/events/party/party-invite-accepted.event';
 import { PartyLeaveRequestedEvent } from "./gateway/events/party/party-leave-requested.event";
+import { PartyInviteRequestedEvent } from "./gateway/events/party/party-invite-requested.event";
 
 @Injectable()
 export class GatewayService implements OnApplicationBootstrap {
@@ -19,7 +20,8 @@ export class GatewayService implements OnApplicationBootstrap {
     const publicEvents: any[] = [
       PartyInviteAcceptedEvent,
       ReadyStateReceivedEvent,
-      PartyLeaveRequestedEvent
+      PartyLeaveRequestedEvent,
+      PartyInviteRequestedEvent
     ];
     this.ebus
       .pipe(ofType(...publicEvents))
