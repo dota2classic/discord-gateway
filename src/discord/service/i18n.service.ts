@@ -1,17 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import {
-  MatchmakingMode,
-  RoomSizes,
-} from '../../gateway/shared-types/matchmaking-mode';
-import { QueueEntry } from '../event/queue-update-received.event';
-import { Client, MessageEmbed, MessageOptions } from 'discord.js';
-import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
-import { ReadyState } from '../../gateway/events/ready-state-received.event';
-import { DiscordUserRepository } from '../repository/discord-user.repository';
-import { MatchInfo } from '../../gateway/events/room-ready.event';
-import { PlayerId } from '../../gateway/shared-types/player-id';
-import formatGameMode from '../../gateway/util/formatGameMode';
-import { GameServerInfo } from '../../gateway/shared-types/game-server-info';
+import { Injectable } from "@nestjs/common";
+import { MatchmakingMode, RoomSizes } from "../../gateway/shared-types/matchmaking-mode";
+import { QueueEntry } from "../event/queue-update-received.event";
+import { Client, MessageEmbed, MessageOptions } from "discord.js";
+import { RoomReadyState } from "../../gateway/events/room-ready-check-complete.event";
+import { ReadyState } from "../../gateway/events/ready-state-received.event";
+import { DiscordUserRepository } from "../repository/discord-user.repository";
+import { MatchInfo } from "../../gateway/events/room-ready.event";
+import { PlayerId } from "../../gateway/shared-types/player-id";
+import formatGameMode from "../../gateway/util/formatGameMode";
+import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
 
 export const Names = {
   [MatchmakingMode.RANKED]: 'РЕЙТИНГ',
@@ -114,6 +111,10 @@ export class I18nService {
   }
 
   roomNotReady() {
-    return `Кто-то не принял игру.`
+    return `Кто-то не принял игру.`;
+  }
+
+  noDiscordAttachment() {
+    return `Этот discord аккаунт не привязан к steam аккаунту на сайте! Чтобы искать игру через discord, привяжите аккаунт в своем профиле на сайте https://dotaclassic.ru! \nИскать игру на сайте можно без привязки discord аккаунта.`;
   }
 }
