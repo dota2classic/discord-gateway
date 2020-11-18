@@ -36,7 +36,7 @@ const EventHandlers = [
   AnnounceMatchFinishedHandler,
   GameServerStartedHandler,
 
-  RoomNotReadyHandler
+  RoomNotReadyHandler,
 ];
 const Repositories = [
   ReadyCheckRepository,

@@ -4,12 +4,13 @@ import { Constructor, EventBus } from '@nestjs/cqrs';
 import { inspect } from 'util';
 import { QueueCreatedEvent } from './gateway/events/queue-created.event';
 import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
-import {ReadyCheckStartedEvent} from "./gateway/events/ready-check-started.event";
+import { ReadyCheckStartedEvent } from './gateway/events/ready-check-started.event';
 import { ReadyStateUpdatedEvent } from 'gateway/events/ready-state-updated.event';
-import {MatchStartedEvent} from "./gateway/events/match-started.event";
+import { MatchStartedEvent } from './gateway/events/match-started.event';
 import { MatchFinishedEvent } from 'gateway/events/match-finished.event';
-import {GameServerStartedEvent} from "./gateway/events/game-server-started.event";
-import { RoomNotReadyEvent } from "./gateway/events/room-not-ready.event";
+import { GameServerStartedEvent } from './gateway/events/game-server-started.event';
+import { RoomNotReadyEvent } from './gateway/events/room-not-ready.event';
+import { UserConnectionCreatedEvent } from 'gateway/events/user/user-connection-created.event';
 
 @Controller()
 export class GatewayController {
@@ -35,6 +36,11 @@ export class GatewayController {
     this.event(QueueUpdatedEvent, data);
   }
 
+  @EventPattern(UserConnectionCreatedEvent.name)
+  async UserConnectionCreatedEvent(data: UserConnectionCreatedEvent) {
+    this.event(UserConnectionCreatedEvent, data);
+  }
+
   @EventPattern('ReadyCheckStartedEvent')
   async ReadyCheckStartedEvent(data: ReadyCheckStartedEvent) {
     this.event(ReadyCheckStartedEvent, data);
@@ -44,7 +50,6 @@ export class GatewayController {
   async ReadyStateUpdatedEvent(data: ReadyStateUpdatedEvent) {
     this.event(ReadyStateUpdatedEvent, data);
   }
-
 
   @EventPattern(RoomNotReadyEvent.name)
   async RoomNotReadyEvent(data: RoomNotReadyEvent) {
@@ -65,5 +70,4 @@ export class GatewayController {
   async GameServerStartedEvent(data: GameServerStartedEvent) {
     this.event(GameServerStartedEvent, data);
   }
-
 }
