@@ -115,6 +115,16 @@ export class I18nService {
   }
 
   noDiscordAttachment() {
-    return `Этот discord аккаунт не привязан к steam аккаунту на сайте!\nЧтобы искать игру через discord, привяжите аккаунт в своем профиле на сайте https://dota2classic.ru \nИскать игру на сайте можно без привязки discord аккаунта.`;
+    return `Этот discord аккаунт не привязан к steam аккаунту на сайте!\nЧтобы искать игру через discord и пользоваться другими функциями, привяжите аккаунт в своем профиле на сайте https://dota2classic.ru \nИскать игру на сайте можно без привязки discord аккаунта.`;
+  }
+
+  partyInviteExpired() {
+    return `Приглашение в группу истекло по времени`;
+  }
+
+  printParty(players: { leader: boolean; view: string }[], leader: PlayerId) {
+    return `Ваша группа:\n${players.map(
+      t => `${t.view}${t.leader ? ' (Лидер группы)' : ''}`,
+    ).join('\n')}`;
   }
 }

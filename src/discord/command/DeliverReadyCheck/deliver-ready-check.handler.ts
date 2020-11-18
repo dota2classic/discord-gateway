@@ -60,6 +60,7 @@ export class DeliverReadyCheckHandler
       this.emojiService.getDeclineEmoji(),
     ];
   }
+
   private filter = (reaction: MessageReaction, user: User) => {
     return (
       // one of options

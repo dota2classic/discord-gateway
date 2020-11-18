@@ -21,6 +21,9 @@ import {SetChannelHandler} from "./command/SetChannel/set-channel.handler";
 import {AnnounceMatchFinishedHandler} from "./event-handler/announce-match-finished.handler";
 import {GameServerStartedHandler} from "./event-handler/game-server-started.handler";
 import { RoomNotReadyHandler } from "./event-handler/room-not-ready.handler";
+import { PartyInviteCreatedHandler } from "./event-handler/party-invite-created.handler";
+import { PartyInviteExpiredHandler } from "./event-handler/party-invite-expired.handler";
+import { PrintPartyHandler } from "./command/PrintParty/print-party.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -37,6 +40,8 @@ const EventHandlers = [
   GameServerStartedHandler,
 
   RoomNotReadyHandler,
+  PartyInviteCreatedHandler,
+  PartyInviteExpiredHandler
 ];
 const Repositories = [
   ReadyCheckRepository,
@@ -48,7 +53,8 @@ const CommandHandlers = [
   ListenQueueMessageHandler,
   UpdateQueueMessageHandler,
   DeliverReadyCheckHandler,
-  SetChannelHandler
+  SetChannelHandler,
+  PrintPartyHandler
 ];
 export const DiscordProviders = [
   ...CommandHandlers,
