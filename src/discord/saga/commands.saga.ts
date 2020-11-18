@@ -9,6 +9,7 @@ import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
 import { SetChannelCommand } from '../command/SetChannel/set-channel.command';
 import { ChannelType } from '../model/channel.model';
 import { PrintPartyCommand } from '../command/PrintParty/print-party.command';
+import { LeavePartyCommand } from "../command/LeaveParty/leave-party.command";
 
 const commandDeletion = tap<DiscordMessageEvent>(it =>
   it.message
@@ -64,6 +65,16 @@ export class CommandsSaga {
       filter(it => it.message.cleanContent.startsWith('!party')),
       commandDeletion,
       map(it => new PrintPartyCommand(it.message.author.id)),
+    );
+  };
+
+  @Saga()
+  unParty = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      filter(it => it.message.cleanContent.startsWith('!unparty')),
+      commandDeletion,
+      map(it => new LeavePartyCommand(it.message.author.id)),
     );
   };
 }

@@ -24,6 +24,7 @@ import { RoomNotReadyHandler } from "./event-handler/room-not-ready.handler";
 import { PartyInviteCreatedHandler } from "./event-handler/party-invite-created.handler";
 import { PartyInviteExpiredHandler } from "./event-handler/party-invite-expired.handler";
 import { PrintPartyHandler } from "./command/PrintParty/print-party.handler";
+import { LeavePartyHandler } from "./command/LeaveParty/leave-party.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -54,7 +55,8 @@ const CommandHandlers = [
   UpdateQueueMessageHandler,
   DeliverReadyCheckHandler,
   SetChannelHandler,
-  PrintPartyHandler
+  PrintPartyHandler,
+  LeavePartyHandler
 ];
 export const DiscordProviders = [
   ...CommandHandlers,
