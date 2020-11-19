@@ -105,7 +105,23 @@ export class CommandsSaga {
         const mentioned: Snowflake | undefined = [
           ...it.message.mentions.users.values(),
         ].map(t => t.id)[0];
-        return new PrintStatsCommand(it.message.channel.id, mentioned || it.message.author.id);
+        return new PrintStatsCommand(it.message.channel.id, mentioned || it.message.author.id, false);
+      }),
+    );
+  };
+
+
+  @Saga()
+  profile = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      filter(it => it.message.cleanContent.startsWith('!profile')),
+      commandDeletion,
+      map(it => {
+        const mentioned: Snowflake | undefined = [
+          ...it.message.mentions.users.values(),
+        ].map(t => t.id)[0];
+        return new PrintStatsCommand(it.message.channel.id, mentioned || it.message.author.id, true);
       }),
     );
   };

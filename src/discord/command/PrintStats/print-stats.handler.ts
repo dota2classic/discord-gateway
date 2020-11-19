@@ -51,7 +51,8 @@ export class PrintStatsHandler implements ICommandHandler<PrintStatsCommand> {
         gameSummary.summary.rank,
         gameSummary.summary.totalWinrate,
         gameSummary.summary.rankedGamesPlayed,
-        gameSummary.summary.bestHeroes
+        gameSummary.summary.bestHeroes,
+        command.full
       ),
     );
   }
