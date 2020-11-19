@@ -26,6 +26,7 @@ import { PartyInviteExpiredHandler } from "./event-handler/party-invite-expired.
 import { PrintPartyHandler } from "./command/PrintParty/print-party.handler";
 import { LeavePartyHandler } from "./command/LeaveParty/leave-party.handler";
 import { InviteToPartyHandler } from "./command/InviteToParty/invite-to-party.handler";
+import { PrintStatsHandler } from "./command/PrintStats/print-stats.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -58,7 +59,8 @@ const CommandHandlers = [
   SetChannelHandler,
   PrintPartyHandler,
   LeavePartyHandler,
-  InviteToPartyHandler
+  InviteToPartyHandler,
+  PrintStatsHandler
 ];
 export const DiscordProviders = [
   ...CommandHandlers,

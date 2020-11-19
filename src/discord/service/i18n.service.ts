@@ -1,14 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { MatchmakingMode, RoomSizes } from "../../gateway/shared-types/matchmaking-mode";
-import { QueueEntry } from "../event/queue-update-received.event";
-import { Client, MessageEmbed, MessageOptions } from "discord.js";
-import { RoomReadyState } from "../../gateway/events/room-ready-check-complete.event";
-import { ReadyState } from "../../gateway/events/ready-state-received.event";
-import { DiscordUserRepository } from "../repository/discord-user.repository";
-import { MatchInfo } from "../../gateway/events/room-ready.event";
-import { PlayerId } from "../../gateway/shared-types/player-id";
-import formatGameMode from "../../gateway/util/formatGameMode";
-import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
+import { Injectable } from '@nestjs/common';
+import {
+  MatchmakingMode,
+  RoomSizes,
+} from '../../gateway/shared-types/matchmaking-mode';
+import { QueueEntry } from '../event/queue-update-received.event';
+import { Client, MessageEmbed, MessageOptions } from 'discord.js';
+import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
+import { ReadyState } from '../../gateway/events/ready-state-received.event';
+import { DiscordUserRepository } from '../repository/discord-user.repository';
+import { MatchInfo } from '../../gateway/events/room-ready.event';
+import { PlayerId } from '../../gateway/shared-types/player-id';
+import formatGameMode from '../../gateway/util/formatGameMode';
+import { GameServerInfo } from '../../gateway/shared-types/game-server-info';
+import heroName from './util/heroName';
 
 export const Names = {
   [MatchmakingMode.RANKED]: 'РЕЙТИНГ',
@@ -118,13 +122,39 @@ export class I18nService {
     return `Этот discord аккаунт не привязан к steam аккаунту на сайте!\nЧтобы искать игру через discord и пользоваться другими функциями, привяжите аккаунт в своем профиле на сайте https://dota2classic.ru \nИскать игру на сайте можно без привязки discord аккаунта.`;
   }
 
+  notFoundAccount() {
+    return `Не могу найти этот discord аккаунт :(`;
+  }
+
   partyInviteExpired() {
     return `Приглашение в группу истекло по времени`;
   }
 
   printParty(players: { leader: boolean; view: string }[], leader: PlayerId) {
-    return `Ваша группа:\n${players.map(
-      t => `${t.view}${t.leader ? ' (Лидер группы)' : ''}`,
-    ).join('\n')}`;
+    return `Ваша группа:\n${players
+      .map(t => `${t.view}${t.leader ? ' (Лидер группы)' : ''}`)
+      .join('\n')}`;
+  }
+
+  printStats(
+    name: string,
+    profileUrl: string,
+    avatar: string,
+    rating: number,
+    rank: number,
+    winrate: number,
+    gamesPlayed: number,
+    bestHeroes: string[],
+  ) {
+    return new MessageEmbed()
+      .setImage(avatar)
+      .addField(`Игрок`, name)
+      .addField(`Профиль`, profileUrl)
+      .addField(`Рейтинг`, `${rating} mmr, ${rank} ранг`)
+      .addField(`Winrate`, `${winrate.toFixed(0)}% за ${gamesPlayed} игр`)
+      .addField(
+        `Лучшие герои`,
+        `${bestHeroes.map(t => heroName(t)).join(', ')}`,
+      );
   }
 }
