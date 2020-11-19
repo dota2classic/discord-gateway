@@ -146,15 +146,20 @@ export class I18nService {
     gamesPlayed: number,
     bestHeroes: string[],
   ) {
+
+
+    const content = `**${name}, ${rank} Ранг **\n${rating} mmr, ${winrate.toFixed(0)}% winrate, ${gamesPlayed} сыграно.\nЛучшие герои: ${bestHeroes.map(t => heroName(t)).join(', ')} \n${profileUrl}`
     return new MessageEmbed()
-      .setImage(avatar)
-      .addField(`Игрок`, name)
-      .addField(`Профиль`, profileUrl)
-      .addField(`Рейтинг`, `${rating} mmr, ${rank} ранг`)
-      .addField(`Winrate`, `${winrate.toFixed(0)}% за ${gamesPlayed} игр`)
-      .addField(
-        `Лучшие герои`,
-        `${bestHeroes.map(t => heroName(t)).join(', ')}`,
-      );
+      .setDescription(content)
+      .setColor(10638079)
+      .setURL(profileUrl)
+      // .addField(`Игрок`, name)
+      // .addField(`Профиль`, profileUrl)
+      // .addField(`Рейтинг`, `${rating} mmr, ${rank} ранг`)
+      // .addField(`Winrate`, `${winrate.toFixed(0)}% за ${gamesPlayed} игр`)
+      // .addField(
+      //   `Лучшие герои`,
+      //   `${bestHeroes.map(t => heroName(t)).join(', ')}`,
+      // );
   }
 }
