@@ -13,6 +13,7 @@ import { RoomNotReadyEvent } from './gateway/events/room-not-ready.event';
 import { UserConnectionCreatedEvent } from 'gateway/events/user/user-connection-created.event';
 import { PartyInviteCreatedEvent } from 'gateway/events/party/party-invite-created.event';
 import { PartyInviteExpiredEvent } from 'gateway/events/party/party-invite-expired.event';
+import { GameResultsEvent } from "./gateway/events/gs/game-results.event";
 
 @Controller()
 export class GatewayController {
@@ -66,6 +67,12 @@ export class GatewayController {
   @EventPattern(MatchFinishedEvent.name)
   async MatchFinishedEvent(data: MatchFinishedEvent) {
     this.event(MatchFinishedEvent, data);
+  }
+
+
+  @EventPattern(GameResultsEvent.name)
+  async GameResultsEvent(data: GameResultsEvent) {
+    this.event(GameResultsEvent, data);
   }
 
   @EventPattern(GameServerStartedEvent.name)
