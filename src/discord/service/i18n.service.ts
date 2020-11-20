@@ -79,12 +79,22 @@ export class I18nService {
   liveMatch(info: MatchInfo, matchId: number, gs: GameServerInfo) {
     const teams = this.constructTeams(info.radiant, info.dire);
 
+    if (
+      info.mode === MatchmakingMode.RANKED ||
+      info.mode === MatchmakingMode.UNRANKED
+    ) {
+      return new MessageEmbed()
+        .setColor(10638079)
+        .setDescription(`${teams}`)
+        .addField('Режим', formatGameMode(info.mode))
+        .addField('Смотреть игру', `steam://connect/${gs.watchURL}`);
+    }
+
     return new MessageEmbed()
       .setColor(10638079)
       .setDescription(`${teams}`)
       .addField('Режим', formatGameMode(info.mode))
-      .addField('Смотреть игру', `steam://connect/${gs.watchURL}`);
-    // .addField('Голосов для рехоста', `${votes} из ${votesToRehost}`);
+      .addField('Смотреть игру', 'Просмотр недоступен для этого режима')
   }
 
   private constructTeams(radiant: PlayerId[], dire: PlayerId[]) {
@@ -155,9 +165,6 @@ export class I18nService {
           `Лучшие герои`,
           `${bestHeroes.map(t => heroName(t)).join(', ')}`,
         );
-
-
-
 
     const content = `**${name}, ${rank} Ранг **\n${rating} mmr, ${winrate.toFixed(
       0,
