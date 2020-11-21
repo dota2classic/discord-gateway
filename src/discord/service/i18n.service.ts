@@ -79,6 +79,9 @@ export class I18nService {
   liveMatch(info: MatchInfo, matchId: number, gs: GameServerInfo) {
     const teams = this.constructTeams(info.radiant, info.dire);
 
+
+    const host = gs.url.split(':')[0];
+    const port = parseInt(gs.url.split(':')[1]);
     if (
       info.mode === MatchmakingMode.RANKED ||
       info.mode === MatchmakingMode.UNRANKED
@@ -87,7 +90,7 @@ export class I18nService {
         .setColor(10638079)
         .setDescription(`${teams}`)
         .addField('Режим', formatGameMode(info.mode))
-        .addField('Смотреть игру', `steam://connect/${gs.watchURL}`);
+        .addField('Смотреть игру', `steam://connect/${host}:${port + 5}`);
     }
 
     return new MessageEmbed()
