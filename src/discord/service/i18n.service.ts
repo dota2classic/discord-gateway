@@ -10,6 +10,7 @@ import { PlayerId } from "../../gateway/shared-types/player-id";
 import formatGameMode from "../../gateway/util/formatGameMode";
 import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
 import heroName from "./util/heroName";
+import { DiscordUserModel } from "../model/discord-user.model";
 
 export const Names = {
   [MatchmakingMode.RANKED]: 'РЕЙТИНГ',
@@ -186,5 +187,9 @@ export class I18nService {
     //   `Лучшие герои`,
     //   `${bestHeroes.map(t => heroName(t)).join(', ')}`,
     // );
+  }
+
+  partyInviteResult(accept: boolean, invited: string) {
+    return `${invited} ${accept ? 'принял' : 'отклонил'} предложение в группу.`
   }
 }
