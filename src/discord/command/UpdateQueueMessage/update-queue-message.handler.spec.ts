@@ -13,6 +13,8 @@ import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
 import { DiscordService } from 'discord/service/discord.service';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
 import Mock = jest.Mock;
+import { I18nService } from "../../service/i18n.service";
+import { DiscordUserRepository } from "../../repository/discord-user.repository";
 
 describe('UpdateQueueMessageHandler', () => {
   let ebus: EventBus;
@@ -28,6 +30,8 @@ describe('UpdateQueueMessageHandler', () => {
           provide: Guild,
           useValue: {},
         },
+        I18nService,
+        DiscordUserRepository,
         QueueMessageSyncRepository,
         DiscordServiceMock,
       ],

@@ -24,7 +24,6 @@ export const Names = {
 @Injectable()
 export class I18nService {
   constructor(
-    private readonly client: Client,
     private readonly discordUserRepository: DiscordUserRepository,
   ) {}
 

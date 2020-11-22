@@ -57,7 +57,7 @@ export class DiscordServiceMockClass {
       entries: QueueEntry[],
     ) => {
       const msg = await this.getMessage(id, channelId);
-      msg.content = this.i18nService.queueMessage(mode, entries);
+      // msg.content = this.i18nService.queueMessage(mode, entries);
     },
   );
 
