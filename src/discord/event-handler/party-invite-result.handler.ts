@@ -23,7 +23,7 @@ export class PartyInviteResultHandler
     await user.send(
       this.i18n.partyInviteResult(
         event.accept,
-        this.client.users.resolve(du.discordId)?.username,
+        this.client.users.resolve(u2.discordId)?.username,
       ),
     );
   }
