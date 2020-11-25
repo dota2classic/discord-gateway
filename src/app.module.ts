@@ -10,10 +10,18 @@ import { QueueProviders } from 'queue';
 import { ClientProvider, GuildProvider } from 'config/discord.provider';
 import {CORE_GATEWAY_HOST, isDev, REDIS_PASSWORD, REDIS_URL} from 'config/env';
 import { DiscordProviders } from 'discord';
+import { SentryModule } from "@ntegral/nestjs-sentry";
 
 
 @Module({
   imports: [
+    SentryModule.forRoot({
+      dsn:
+        "https://24a4773cd3cb4072b6b80f160385a384@o435989.ingest.sentry.io/5531861",
+      debug: false,
+      environment: isDev ? "dev" : "production",
+      logLevel: 2, //based on sentry.io loglevel //
+    }),
     CqrsModule,
     TypeOrmModule.forRoot(
       (isDev ? devDbConfig : prodDbConfig) as TypeOrmModuleOptions,
