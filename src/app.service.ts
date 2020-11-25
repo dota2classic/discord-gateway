@@ -6,7 +6,7 @@ import { EngageNeededEvent } from "./discord/event/engage-needed.event";
 @Injectable()
 export class AppService {
   constructor(private readonly ebus: EventBus) {}
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron('0 */30 12-23 * * *')
   async engageGame() {
     this.ebus.publish(new EngageNeededEvent());
   }
