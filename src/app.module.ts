@@ -11,10 +11,12 @@ import { ClientProvider, GuildProvider } from 'config/discord.provider';
 import {CORE_GATEWAY_HOST, isDev, REDIS_PASSWORD, REDIS_URL} from 'config/env';
 import { DiscordProviders } from 'discord';
 import { SentryModule } from "@ntegral/nestjs-sentry";
+import { ScheduleModule } from "@nestjs/schedule";
 
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     SentryModule.forRoot({
       dsn:
         "https://24a4773cd3cb4072b6b80f160385a384@o435989.ingest.sentry.io/5531861",

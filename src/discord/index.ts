@@ -28,6 +28,7 @@ import { LeavePartyHandler } from "./command/LeaveParty/leave-party.handler";
 import { InviteToPartyHandler } from "./command/InviteToParty/invite-to-party.handler";
 import { PrintStatsHandler } from "./command/PrintStats/print-stats.handler";
 import { PartyInviteResultHandler } from "./event-handler/party-invite-result.handler";
+import { EngageNeededHandler } from "./event-handler/engage-needed.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -46,7 +47,9 @@ const EventHandlers = [
   RoomNotReadyHandler,
   PartyInviteCreatedHandler,
   PartyInviteExpiredHandler,
-  PartyInviteResultHandler
+  PartyInviteResultHandler,
+
+  EngageNeededHandler
 ];
 const Repositories = [
   ReadyCheckRepository,

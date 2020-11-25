@@ -15,6 +15,7 @@ import { DiscordUserRepository } from './discord/repository/discord-user.reposit
 import { GetAllConnectionsQuery } from './gateway/queries/GetAllConnections/get-all-connections.query';
 import { UserConnection } from './gateway/shared-types/user-connection';
 import { GetAllConnectionsQueryResult } from './gateway/queries/GetAllConnections/get-all-connections-query.result';
+import { EngageNeededEvent } from "./discord/event/engage-needed.event";
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);
@@ -88,6 +89,10 @@ async function bootstrap() {
 
   app.get(EventBus).publish(new MicroserviceStartedEvent());
   console.log(`?`)
+
+
+
+  ebus.publish(new EngageNeededEvent())
 
 }
 bootstrap();
