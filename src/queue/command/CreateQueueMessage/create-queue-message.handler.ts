@@ -4,7 +4,7 @@ import { QueueMessageModel } from 'queue/model/queue-message.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MatchmakingMode } from 'gateway/shared-types/matchmaking-mode';
-import { Client, MessageOptions, TextChannel } from 'discord.js';
+import { Client, Message, MessageOptions, TextChannel } from "discord.js";
 import { QueueMessageCreatedEvent } from 'queue/event/queue-message-created.event';
 import { CreateQueueMessageCommand } from 'queue/command/CreateQueueMessage/create-queue-message.command';
 import { I18nService } from '../../../discord/service/i18n.service';
@@ -50,7 +50,7 @@ export class CreateQueueMessageHandler
     const channel = (await this.client.channels.fetch(
       channelID,
     )) as TextChannel;
-    const msg = (await channel.send(this.i18nService.queueMessage(mode, [])))[0];
+    const msg = (await channel.send(this.i18nService.queueMessage(mode, []))) as Message;
     qm.messageID = msg.id;
     await this.queueMessageModelRepository.save(qm);
     this.ebus.publish(

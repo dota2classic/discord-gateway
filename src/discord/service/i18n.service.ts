@@ -35,10 +35,27 @@ export class I18nService {
 
     return it.value;
   };
+
   public queueMessage(
     mode: MatchmakingMode,
     players: QueueEntry[],
   ): MessageOptions {
+
+    if(mode === MatchmakingMode.BOTS){
+      return new MessageEmbed()
+        .setColor('#0099ff')
+        .addField('Режим', formatGameMode(mode))
+        .addField('Игроков в поиске', `${players.length}`)
+        .setDescription(
+          `\n${players
+            .map(
+              (it, index) =>
+                `     ${index + 1} **${this.formatPlayer(it.id)}**\n`,
+            )
+            .join('\n')}`,
+        );
+
+    }
     return new MessageEmbed()
       .setColor('#0099ff')
       .addField('Режим', formatGameMode(mode))
@@ -70,7 +87,7 @@ export class I18nService {
     }
     return new MessageEmbed()
       .setColor('#0099ff')
-      .addField('Режим', Names[mode])
+      .addField('Режим', formatGameMode(mode))
       .addField('Приняли игру', `${state.accepted} / ${state.total}`)
       .addField('Ваш статус', ls);
   }
