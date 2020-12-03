@@ -15,6 +15,7 @@ import { PartyInviteCreatedEvent } from 'gateway/events/party/party-invite-creat
 import { PartyInviteExpiredEvent } from 'gateway/events/party/party-invite-expired.event';
 import { GameResultsEvent } from "./gateway/events/gs/game-results.event";
 import { PartyInviteResultEvent } from "./gateway/events/party/party-invite-result.event";
+import { EnterQueueDeclinedEvent } from "./gateway/events/mm/enter-queue-declined.event";
 
 @Controller()
 export class GatewayController {
@@ -73,6 +74,11 @@ export class GatewayController {
   @EventPattern(MatchFinishedEvent.name)
   async MatchFinishedEvent(data: MatchFinishedEvent) {
     this.event(MatchFinishedEvent, data);
+  }
+
+  @EventPattern(EnterQueueDeclinedEvent.name)
+  async EnterQueueDeclinedEvent(data: EnterQueueDeclinedEvent) {
+    this.event(EnterQueueDeclinedEvent, data);
   }
 
 

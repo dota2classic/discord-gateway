@@ -29,6 +29,7 @@ import { InviteToPartyHandler } from "./command/InviteToParty/invite-to-party.ha
 import { PrintStatsHandler } from "./command/PrintStats/print-stats.handler";
 import { PartyInviteResultHandler } from "./event-handler/party-invite-result.handler";
 import { EngageNeededHandler } from "./event-handler/engage-needed.handler";
+import { EnterQueueDeclinedHandler } from "./event-handler/enter-queue-declined.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -49,7 +50,8 @@ const EventHandlers = [
   PartyInviteExpiredHandler,
   PartyInviteResultHandler,
 
-  EngageNeededHandler
+  EngageNeededHandler,
+  EnterQueueDeclinedHandler
 ];
 const Repositories = [
   ReadyCheckRepository,

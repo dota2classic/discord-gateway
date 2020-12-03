@@ -92,7 +92,7 @@ async function bootstrap() {
 
 
 
-  ebus.publish(new EngageNeededEvent())
+  // ebus.publish(new EngageNeededEvent())
 
 }
 bootstrap();
