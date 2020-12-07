@@ -1,18 +1,22 @@
-import { Injectable } from "@nestjs/common";
-import { MatchmakingMode, RoomSizes } from "../../gateway/shared-types/matchmaking-mode";
-import { QueueEntry } from "../event/queue-update-received.event";
-import { MessageEmbed, MessageOptions } from "discord.js";
-import { RoomReadyState } from "../../gateway/events/room-ready-check-complete.event";
-import { ReadyState } from "../../gateway/events/ready-state-received.event";
-import { DiscordUserRepository } from "../repository/discord-user.repository";
-import { MatchInfo } from "../../gateway/events/room-ready.event";
-import { PlayerId } from "../../gateway/shared-types/player-id";
-import formatGameMode from "../../gateway/util/formatGameMode";
-import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
-import heroName from "./util/heroName";
-import { BanStatus } from "../../gateway/queries/GetPlayerInfo/get-player-info-query.result";
-import { formatDateFullStr } from "./util/dates";
-import * as plural from "plural-ru"
+import { Injectable } from '@nestjs/common';
+import {
+  MatchmakingMode,
+  RoomSizes,
+} from '../../gateway/shared-types/matchmaking-mode';
+import { QueueEntry } from '../event/queue-update-received.event';
+import { MessageEmbed, MessageOptions } from 'discord.js';
+import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
+import { ReadyState } from '../../gateway/events/ready-state-received.event';
+import { DiscordUserRepository } from '../repository/discord-user.repository';
+import { MatchInfo } from '../../gateway/events/room-ready.event';
+import { PlayerId } from '../../gateway/shared-types/player-id';
+import formatGameMode from '../../gateway/util/formatGameMode';
+import { GameServerInfo } from '../../gateway/shared-types/game-server-info';
+import heroName from './util/heroName';
+import { BanStatus } from '../../gateway/queries/GetPlayerInfo/get-player-info-query.result';
+import { formatDateFullStr } from './util/dates';
+import * as plural from 'plural-ru';
+import { profile } from './util/urls';
 
 @Injectable()
 export class I18nService {
@@ -25,24 +29,44 @@ export class I18nService {
       return `<@${isDiscord.discordId}>`;
     }
 
-    return it.value;
+    return profile(it);
   };
 
   public queueMessage(
     mode: MatchmakingMode,
     players: QueueEntry[],
   ): MessageOptions {
+    if (mode === MatchmakingMode.BOTS) {
+      const minutesLeft = 10 - (new Date().getMinutes() % 10);
+      const formattedTimeLeft = plural.noun(
+        minutesLeft,
+        '%d минуту',
+        '%d минуты',
+        '%d минут',
+      );
+      const formattedPlayersLeft = plural.noun(
+        2 - players.length,
+        'Нужен еще %d игрок',
+        'Нужно еще %d игрока',
+        'Нужно еще %d игроков',
+      );
 
+      const hasEnough = 2 - players.length <= 0;
 
-    if(mode === MatchmakingMode.BOTS){
-      const minutesLeft = 10 - new Date().getMinutes() % 10;
-      const formattedTimeLeft = plural.noun(minutesLeft, '%d минуту', '%d минуты', '%d минут');
-      const formattedPlayersLeft = plural.noun(2 - players.length, 'Нужен еще %d игрок', 'Нужно еще %d игрока', 'Нужно еще %d игроков')
+      const summary = `${
+        hasEnough
+          ? `Игроков достаточно, игра начнется через ${formattedTimeLeft}`
+          : `Игроков недостаточно, нужно минимум 2 игрока для запуска игры`
+      }`;
       return new MessageEmbed()
         .setColor('#0099ff')
         .addField('Режим', formatGameMode(mode))
-        .addField('Игроков для начала игры', `${2 - players.length <= 0 ? 'Игроков достаточно для игры' : formattedPlayersLeft }`)
+        .addField(
+          'Игроков для начала игры',
+          `${hasEnough ? 'Игроков достаточно для игры' : formattedPlayersLeft}`,
+        )
         .addField(`Проверка на игру`, `Через ${formattedTimeLeft}`)
+        .addField(`Итог`, summary)
         .setDescription(
           `\n${players
             .map(
@@ -51,7 +75,6 @@ export class I18nService {
             )
             .join('\n')}`,
         );
-
     }
     return new MessageEmbed()
       .setColor('#0099ff')
@@ -105,13 +128,15 @@ export class I18nService {
         .addField('Смотреть игру', `steam://connect/${host}:${port + 5}`);
     }
 
-    return new MessageEmbed()
-      .setColor(10638079)
-      .setDescription(`${teams}`)
-      .addField('Режим', formatGameMode(info.mode))
-      // todo fix VDS and uncomment
-      // .addField('Смотреть игру', 'Просмотр недоступен для этого режима');
-      .addField('Смотреть игру', `steam://connect/${host}:${port + 5}`);
+    return (
+      new MessageEmbed()
+        .setColor(10638079)
+        .setDescription(`${teams}`)
+        .addField('Режим', formatGameMode(info.mode))
+        // todo fix VDS and uncomment
+        // .addField('Смотреть игру', 'Просмотр недоступен для этого режима');
+        .addField('Смотреть игру', `steam://connect/${host}:${port + 5}`)
+    );
   }
 
   private constructTeams(radiant: PlayerId[], dire: PlayerId[]) {
