@@ -12,15 +12,7 @@ import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
 import heroName from "./util/heroName";
 import { BanStatus } from "../../gateway/queries/GetPlayerInfo/get-player-info-query.result";
 import { formatDateFullStr } from "./util/dates";
-
-export const Names = {
-  [MatchmakingMode.RANKED]: 'РЕЙТИНГ',
-  [MatchmakingMode.UNRANKED]: 'ОБЫЧНАЯ',
-  [MatchmakingMode.SOLOMID]: '1x1 МИД',
-  // [MatchmakingMode.DIRETIDE]: 'DIRETIDE',
-  // [MatchmakingMode.GREEVILING]: 'GREEVILING',
-  // [MatchmakingMode.ABILITY_DRAFT]: 'ABILITY DRAFT',
-};
+import * as plural from "plural-ru"
 
 @Injectable()
 export class I18nService {
@@ -41,11 +33,16 @@ export class I18nService {
     players: QueueEntry[],
   ): MessageOptions {
 
+
     if(mode === MatchmakingMode.BOTS){
+      const minutesLeft = 10 - new Date().getMinutes() % 10;
+      const formattedTimeLeft = plural.noun(minutesLeft, '%d минуту', '%d минуты', '%d минут');
+      const formattedPlayersLeft = plural.noun(2 - players.length, 'Нужен еще %d игрок', 'Нужно еще %d игрока', 'Нужно еще %d игроков')
       return new MessageEmbed()
         .setColor('#0099ff')
         .addField('Режим', formatGameMode(mode))
-        .addField('Игроков в поиске', `${players.length}`)
+        .addField('Игроков для начала игры', `${2 - players.length <= 0 ? 'Игроков достаточно для игры' : formattedPlayersLeft }`)
+        .addField(`Проверка на игру`, `Через ${formattedTimeLeft}`)
         .setDescription(
           `\n${players
             .map(
@@ -112,7 +109,9 @@ export class I18nService {
       .setColor(10638079)
       .setDescription(`${teams}`)
       .addField('Режим', formatGameMode(info.mode))
-      .addField('Смотреть игру', 'Просмотр недоступен для этого режима');
+      // todo fix VDS and uncomment
+      // .addField('Смотреть игру', 'Просмотр недоступен для этого режима');
+      .addField('Смотреть игру', `steam://connect/${host}:${port + 5}`);
   }
 
   private constructTeams(radiant: PlayerId[], dire: PlayerId[]) {
