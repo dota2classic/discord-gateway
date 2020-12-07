@@ -5,7 +5,6 @@ import { Client, Collection, Message, MessageReaction, Snowflake, User } from "d
 import { ReadyCheckRepository } from "../../repository/ready-check.repository";
 import { ReadyCheckModel } from "../../model/ready-check.model";
 import { EmojiService } from "../../service/emoji.service";
-import { ROOM_READY_CHECK_ACCEPT_TIME } from "../../../gateway/constants/times";
 import { I18nService } from "../../service/i18n.service";
 import { ReadyState, ReadyStateReceivedEvent } from "../../../gateway/events/ready-state-received.event";
 import { DiscordUserRepository } from "../../repository/discord-user.repository";
@@ -94,12 +93,6 @@ export class DeliverReadyCheckHandler
       .then(c => this.process(msg, user, c))
       .catch(c => this.process(msg, user, c));
 
-    const updateReadyState = (rs: ReadyState) => {
-      msg.edit(
-        this.i18nService.readyCheck(rc.mode, rc.globalState, rc.readyState),
-      );
-    };
-
     reactor.then(t => {
       if (t === this.emojiService.getAcceptEmoji()) {
         rc.readyState = ReadyState.READY;
@@ -116,7 +109,6 @@ export class DeliverReadyCheckHandler
           rc.readyState,
         ),
       );
-      updateReadyState(rc.readyState);
     });
   }
 }
