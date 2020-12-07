@@ -31,6 +31,7 @@ export class DeliverReadyCheckHandler
       this.i18nService.readyCheck(
         command.mode,
         command.state,
+        command.entries,
         ReadyState.PENDING,
       ),
     )) as Message;

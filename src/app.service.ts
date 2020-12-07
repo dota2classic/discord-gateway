@@ -10,7 +10,7 @@ export class AppService {
   constructor(private readonly ebus: EventBus) {}
   @Cron('0 */30 12-23 * * *')
   async engageGame() {
-    this.ebus.publish(new EngageNeededEvent());
+    // this.ebus.publish(new EngageNeededEvent());
   }
 
   // each minute

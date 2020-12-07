@@ -1,22 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import {
-  MatchmakingMode,
-  RoomSizes,
-} from '../../gateway/shared-types/matchmaking-mode';
-import { QueueEntry } from '../event/queue-update-received.event';
-import { MessageEmbed, MessageOptions } from 'discord.js';
-import { RoomReadyState } from '../../gateway/events/room-ready-check-complete.event';
-import { ReadyState } from '../../gateway/events/ready-state-received.event';
-import { DiscordUserRepository } from '../repository/discord-user.repository';
-import { MatchInfo } from '../../gateway/events/room-ready.event';
-import { PlayerId } from '../../gateway/shared-types/player-id';
-import formatGameMode from '../../gateway/util/formatGameMode';
-import { GameServerInfo } from '../../gateway/shared-types/game-server-info';
-import heroName from './util/heroName';
-import { BanStatus } from '../../gateway/queries/GetPlayerInfo/get-player-info-query.result';
-import { formatDateFullStr } from './util/dates';
-import * as plural from 'plural-ru';
-import { profile } from './util/urls';
+import { Injectable } from "@nestjs/common";
+import { MatchmakingMode, RoomSizes } from "../../gateway/shared-types/matchmaking-mode";
+import { QueueEntry } from "../event/queue-update-received.event";
+import { MessageEmbed, MessageOptions } from "discord.js";
+import { ReadyCheckEntry, RoomReadyState } from "../../gateway/events/room-ready-check-complete.event";
+import { ReadyState } from "../../gateway/events/ready-state-received.event";
+import { DiscordUserRepository } from "../repository/discord-user.repository";
+import { MatchInfo } from "../../gateway/events/room-ready.event";
+import { PlayerId } from "../../gateway/shared-types/player-id";
+import formatGameMode from "../../gateway/util/formatGameMode";
+import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
+import heroName from "./util/heroName";
+import { BanStatus } from "../../gateway/queries/GetPlayerInfo/get-player-info-query.result";
+import { formatDateFullStr } from "./util/dates";
+import * as plural from "plural-ru";
+import { profile } from "./util/urls";
 
 @Injectable()
 export class I18nService {
@@ -93,6 +90,7 @@ export class I18nService {
   public readyCheck(
     mode: MatchmakingMode,
     state: RoomReadyState,
+    entries: ReadyCheckEntry[],
     localState: ReadyState,
   ): MessageOptions {
     let ls = '';
@@ -107,6 +105,28 @@ export class I18nService {
     }
     return new MessageEmbed()
       .setColor('#0099ff')
+      .setDescription(
+        entries
+          .map(entry => {
+            let emojiStatus: string = ':wave:';
+            const status = entry.readyState;
+            if (status === ReadyState.PENDING) {
+              emojiStatus = ':wave:';
+            } else if (status === ReadyState.READY) {
+              emojiStatus = ':white_check_mark:';
+            } else if (
+              status === ReadyState.DECLINE ||
+              status === ReadyState.TIMEOUT
+            ) {
+              emojiStatus = ':no_entry_sign:';
+            }
+
+            return `${emojiStatus} \u200B \u200B \u200B \u200B \u200B \u200B \u200B \u200B ${this.formatPlayer(
+              entry.playerId,
+            )}`;
+          })
+          .join('\n\n'),
+      )
       .addField('Режим', formatGameMode(mode))
       .addField('Приняли игру', `${state.accepted} / ${state.total}`)
       .addField('Ваш статус', ls);

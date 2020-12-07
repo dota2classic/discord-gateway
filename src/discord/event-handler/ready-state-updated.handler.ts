@@ -29,7 +29,7 @@ export class ReadyStateUpdatedHandler
           t.channelId,
         );
         await msg.edit(
-          this.i18nService.readyCheck(event.mode, event.state, t.readyState),
+          this.i18nService.readyCheck(event.mode, event.state, event.entries, t.readyState),
         );
       }),
     );
