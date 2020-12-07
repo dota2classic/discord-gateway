@@ -12,6 +12,7 @@ import { PrintPartyCommand } from "../command/PrintParty/print-party.command";
 import { LeavePartyCommand } from "../command/LeaveParty/leave-party.command";
 import { InviteToPartyCommand } from "../command/InviteToParty/invite-to-party.command";
 import { PrintStatsCommand } from "../command/PrintStats/print-stats.command";
+import { PrintHelpCommand } from "../command/PrintHelp/print-help.command";
 
 const commandDeletion = tap<DiscordMessageEvent>(it =>
   it.message
@@ -123,6 +124,17 @@ export class CommandsSaga {
         ].map(t => t.id)[0];
         return new PrintStatsCommand(it.message.channel.id, mentioned || it.message.author.id, true);
       }),
+    );
+  };
+
+
+  @Saga()
+  help = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      filter(it => it.message.cleanContent.startsWith('!help')),
+      commandDeletion,
+      map(it => new PrintHelpCommand(it.message.channel.id)),
     );
   };
 }
