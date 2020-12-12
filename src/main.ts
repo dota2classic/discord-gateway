@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { QueueMessageSyncModel } from 'queue/model/queue-message-sync.model';
-import {REDIS_PASSWORD, REDIS_URL} from 'config/env';
+import { REDIS_PASSWORD, REDIS_URL } from 'config/env';
 import { INestMicroservice, Logger } from '@nestjs/common';
 import { MicroserviceStartedEvent } from 'queue/event/microservice-started.event';
 import { Subscriber } from 'rxjs';
@@ -15,7 +15,8 @@ import { DiscordUserRepository } from './discord/repository/discord-user.reposit
 import { GetAllConnectionsQuery } from './gateway/queries/GetAllConnections/get-all-connections.query';
 import { UserConnection } from './gateway/shared-types/user-connection';
 import { GetAllConnectionsQueryResult } from './gateway/queries/GetAllConnections/get-all-connections-query.result';
-import { EngageNeededEvent } from "./discord/event/engage-needed.event";
+import { EngageNeededEvent } from './discord/event/engage-needed.event';
+import { AppService } from './app.service';
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);
@@ -31,7 +32,6 @@ async function initRuntimeData(app: INestMicroservice) {
     GetAllConnectionsQuery,
     GetAllConnectionsQueryResult
   >(new GetAllConnectionsQuery(UserConnection.DISCORD));
-
 
   console.log(`Received ${cons.entries.length} entries`);
   cons.entries.forEach(t => {
@@ -88,11 +88,9 @@ async function bootstrap() {
   );
 
   app.get(EventBus).publish(new MicroserviceStartedEvent());
-  console.log(`?`)
+  console.log(`?`);
 
-
-
+  await app.get(AppService).syncRoles();
   // ebus.publish(new EngageNeededEvent())
-
 }
 bootstrap();

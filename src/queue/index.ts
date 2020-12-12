@@ -13,6 +13,7 @@ import { GetByConnectionQuery } from '../gateway/queries/GetByConnection/get-by-
 import { GetUserInfoQuery } from "../gateway/queries/GetUserInfo/get-user-info.query";
 import { GetPartyQuery } from "../gateway/queries/GetParty/get-party.query";
 import { GetPlayerInfoQuery } from "../gateway/queries/GetPlayerInfo/get-player-info.query";
+import { GetRoleSubscriptionsQuery } from "../gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query";
 
 const CommandHandlers = [
   CreateQueueMessageHandler,
@@ -31,6 +32,8 @@ const QueryHandlers = [
   outerQuery(GetUserInfoQuery, 'QueryCore'),
   outerQuery(GetPartyQuery, 'QueryCore'),
   outerQuery(GetPlayerInfoQuery, 'QueryCore'),
+  outerQuery(GetRoleSubscriptionsQuery, 'QueryCore'),
+
 ];
 const Sagas = [QueueSaga];
 

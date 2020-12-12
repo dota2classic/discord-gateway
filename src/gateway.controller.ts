@@ -16,6 +16,7 @@ import { PartyInviteExpiredEvent } from 'gateway/events/party/party-invite-expir
 import { GameResultsEvent } from "./gateway/events/gs/game-results.event";
 import { PartyInviteResultEvent } from "./gateway/events/party/party-invite-result.event";
 import { EnterQueueDeclinedEvent } from "./gateway/events/mm/enter-queue-declined.event";
+import { UserUpdatedEvent } from "./gateway/events/user/user-updated.event";
 
 @Controller()
 export class GatewayController {
@@ -102,5 +103,11 @@ export class GatewayController {
   @EventPattern(PartyInviteExpiredEvent.name)
   async PartyInviteExpiredEvent(data: PartyInviteExpiredEvent) {
     this.event(PartyInviteExpiredEvent, data);
+  }
+
+
+  @EventPattern(UserUpdatedEvent.name)
+  async UserUpdatedEvent(data: UserUpdatedEvent) {
+    this.event(UserUpdatedEvent, data);
   }
 }

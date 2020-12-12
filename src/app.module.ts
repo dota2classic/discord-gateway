@@ -12,6 +12,8 @@ import {CORE_GATEWAY_HOST, isDev, REDIS_PASSWORD, REDIS_URL} from 'config/env';
 import { DiscordProviders } from 'discord';
 import { SentryModule } from "@ntegral/nestjs-sentry";
 import { ScheduleModule } from "@nestjs/schedule";
+import { outerQuery } from "./gateway/util/outerQuery";
+import { GetRoleSubscriptionsQuery } from "./gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query";
 
 
 @Module({
@@ -47,9 +49,9 @@ import { ScheduleModule } from "@nestjs/schedule";
     ClientProvider,
     GuildProvider,
     GatewayService,
-    AppService,
     ...QueueProviders,
-    ...DiscordProviders
+    ...DiscordProviders,
+    AppService,
   ],
 })
 export class AppModule {}
