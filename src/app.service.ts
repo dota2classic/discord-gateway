@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { Cron } from "@nestjs/schedule";
-import { EventBus, QueryBus } from "@nestjs/cqrs";
-import { QueueUpdatedEvent } from "./gateway/events/queue-updated.event";
-import { MatchmakingMode } from "./gateway/shared-types/matchmaking-mode";
-import { GetRoleSubscriptionsQuery } from "./gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query";
-import { GetRoleSubscriptionsQueryResult } from "./gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions-query.result";
-import { DiscordUserRepository } from "./discord/repository/discord-user.repository";
-import { Client, Guild, Snowflake } from "discord.js";
-import { Role } from "./gateway/shared-types/roles";
-import { PlayerId } from "./gateway/shared-types/player-id";
+import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import { EventBus, QueryBus } from '@nestjs/cqrs';
+import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
+import { MatchmakingMode } from './gateway/shared-types/matchmaking-mode';
+import { GetRoleSubscriptionsQuery } from './gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query';
+import { GetRoleSubscriptionsQueryResult } from './gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions-query.result';
+import { DiscordUserRepository } from './discord/repository/discord-user.repository';
+import { Client, Guild, Snowflake, TextChannel } from 'discord.js';
+import { Role } from './gateway/shared-types/roles';
+import { PlayerId } from './gateway/shared-types/player-id';
 
 @Injectable()
 export class AppService {
@@ -35,6 +35,9 @@ export class AppService {
     roles: GetRoleSubscriptionsQueryResult,
     targetRole: Role,
   ) {
+    const ch = this.guild.channels.resolve('720288829029744740') as TextChannel;
+    const roleName = this.guild.roles.cache.get(discordRoleId).name;
+
     const discordUsersWithRole = this.guild.members.cache.filter(
       mem => !!mem.roles.cache.find(t => t.id === discordRoleId),
     );
@@ -48,6 +51,9 @@ export class AppService {
           // if there is no user in sync, we remove role
           await discordUserWithRole.roles.remove(discordRoleId);
           removedRoles++;
+          await ch.send(
+            `Убрал роль ${roleName} <@${discordUserWithRole.user.id}>`,
+          );
           return;
         }
         const rolesSet = roles.entries.find(
@@ -58,6 +64,9 @@ export class AppService {
           // this dude doesn't even have a record, remove em
           await discordUserWithRole.roles.remove(discordRoleId);
           removedRoles++;
+          await ch.send(
+            `Убрал роль ${roleName} <@${discordUserWithRole.user.id}>`,
+          );
           return;
         }
         const roleLifetime = rolesSet.entries.find(t => t.role === targetRole);
@@ -66,6 +75,9 @@ export class AppService {
         } else {
           await discordUserWithRole.roles.remove(discordRoleId);
           removedRoles++;
+          await ch.send(
+            `Убрал роль ${roleName} <@${discordUserWithRole.user.id}>`,
+          );
         }
       }),
     );
@@ -82,6 +94,8 @@ export class AppService {
     roles: GetRoleSubscriptionsQueryResult,
     targetRole: Role,
   ) {
+    const ch = this.guild.channels.resolve('720288829029744740') as TextChannel;
+    const roleName = this.guild.roles.cache.get(discordRoleId).name;
     let rolesAdded = 0;
     await Promise.all(
       roles.entries.map(async role => {
@@ -96,8 +110,13 @@ export class AppService {
           try {
             const roleEntry = role.entries.find(t => t.role === targetRole);
             if (roleEntry && roleEntry.end_time > new Date().getTime()) {
-              await member.roles.add(discordRoleId);
-              rolesAdded++;
+              if (!member.roles.cache.find(t => t.id === discordRoleId)) {
+                await member.roles.add(discordRoleId);
+                rolesAdded++;
+                await ch.send(
+                  `Добавил роль ${roleName} <@${member.user.id}>`,
+                );
+              }
             }
           } catch (e) {
             console.log(e);
