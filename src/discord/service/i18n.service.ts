@@ -1,19 +1,25 @@
-import { Injectable } from "@nestjs/common";
-import { MatchmakingMode, RoomSizes } from "../../gateway/shared-types/matchmaking-mode";
-import { QueueEntry } from "../event/queue-update-received.event";
-import { MessageEmbed, MessageOptions } from "discord.js";
-import { ReadyCheckEntry, RoomReadyState } from "../../gateway/events/room-ready-check-complete.event";
-import { ReadyState } from "../../gateway/events/ready-state-received.event";
-import { DiscordUserRepository } from "../repository/discord-user.repository";
-import { MatchInfo } from "../../gateway/events/room-ready.event";
-import { PlayerId } from "../../gateway/shared-types/player-id";
-import formatGameMode from "../../gateway/util/formatGameMode";
-import { GameServerInfo } from "../../gateway/shared-types/game-server-info";
-import heroName from "./util/heroName";
-import { BanStatus } from "../../gateway/queries/GetPlayerInfo/get-player-info-query.result";
-import { formatDateFullStr } from "./util/dates";
-import * as plural from "plural-ru";
-import { profile } from "./util/urls";
+import { Injectable } from '@nestjs/common';
+import {
+  MatchmakingMode,
+  RoomSizes,
+} from '../../gateway/shared-types/matchmaking-mode';
+import { QueueEntry } from '../event/queue-update-received.event';
+import { MessageEmbed, MessageOptions } from 'discord.js';
+import {
+  ReadyCheckEntry,
+  RoomReadyState,
+} from '../../gateway/events/room-ready-check-complete.event';
+import { ReadyState } from '../../gateway/events/ready-state-received.event';
+import { DiscordUserRepository } from '../repository/discord-user.repository';
+import { MatchInfo } from '../../gateway/events/room-ready.event';
+import { PlayerId } from '../../gateway/shared-types/player-id';
+import formatGameMode from '../../gateway/util/formatGameMode';
+import { GameServerInfo } from '../../gateway/shared-types/game-server-info';
+import heroName from './util/heroName';
+import { BanStatus } from '../../gateway/queries/GetPlayerInfo/get-player-info-query.result';
+import { formatDateFullStr } from './util/dates';
+import * as plural from 'plural-ru';
+import { profile } from './util/urls';
 
 @Injectable()
 export class I18nService {
@@ -215,9 +221,10 @@ export class I18nService {
     gamesPlayed: number,
     bestHeroes: string[],
     full: boolean,
+    banStatus: BanStatus,
   ) {
-    if (full)
-      return new MessageEmbed()
+    if (full) {
+      const e = new MessageEmbed()
         .setImage(avatar)
         .addField(`Игрок`, name)
         .addField(`Профиль`, profileUrl)
@@ -228,15 +235,27 @@ export class I18nService {
           `${bestHeroes.map(t => heroName(t)).join(', ')}`,
         );
 
+      if (banStatus.isBanned) {
+        e.addField(
+          'Статус бана',
+          `Активен до ${formatDateFullStr(banStatus.bannedUntil)}`,
+        );
+      }
+
+      return e;
+    }
+
     const content = `**${name}, ${rank} Ранг **\n${rating} mmr, ${winrate.toFixed(
       0,
     )}% winrate, ${gamesPlayed} сыграно.\nЛучшие герои: ${bestHeroes
       .map(t => heroName(t))
       .join(', ')} \n${profileUrl}`;
+
     return new MessageEmbed()
       .setDescription(content)
       .setColor(10638079)
       .setURL(profileUrl);
+
     // .addField(`Игрок`, name)
     // .addField(`Профиль`, profileUrl)
     // .addField(`Рейтинг`, `${rating} mmr, ${rank} ранг`)
