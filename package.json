@@ -31,6 +31,7 @@
     "@nestjs/schedule": "^0.4.1",
     "@nestjs/typeorm": "^7.1.4",
     "@ntegral/nestjs-sentry": "^1.0.4",
+    "canvas": "^2.6.1",
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0",
     "mysql": "^2.18.1",

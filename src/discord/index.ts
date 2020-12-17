@@ -32,6 +32,10 @@ import { EngageNeededHandler } from "./event-handler/engage-needed.handler";
 import { EnterQueueDeclinedHandler } from "./event-handler/enter-queue-declined.handler";
 import { PrintHelpHandler } from "./command/PrintHelp/print-help.handler";
 import { UserUpdatedHandler } from "./event-handler/user-updated.handler";
+import { PrintLiveHandler } from "./command/PrintLive/print-live.handler";
+import { LiveMatchUpdateHandler } from "./event-handler/live-match-update.handler";
+import { LiveMatchService } from "./service/live-match.service";
+import { MatchFinishedLiveCloseHandler } from "./event-handler/match-finished-live-close.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -54,7 +58,9 @@ const EventHandlers = [
 
   EngageNeededHandler,
   EnterQueueDeclinedHandler,
-  UserUpdatedHandler
+  UserUpdatedHandler,
+  LiveMatchUpdateHandler,
+  MatchFinishedLiveCloseHandler
 ];
 const Repositories = [
   ReadyCheckRepository,
@@ -71,7 +77,8 @@ const CommandHandlers = [
   LeavePartyHandler,
   InviteToPartyHandler,
   PrintStatsHandler,
-  PrintHelpHandler
+  PrintHelpHandler,
+  PrintLiveHandler
 ];
 export const DiscordProviders = [
   ...CommandHandlers,
@@ -81,4 +88,5 @@ export const DiscordProviders = [
   EmojiService,
   ReadyCheckService,
   DiscordService,
+  LiveMatchService
 ];

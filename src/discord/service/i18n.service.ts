@@ -20,6 +20,7 @@ import { BanStatus } from '../../gateway/queries/GetPlayerInfo/get-player-info-q
 import { formatDateFullStr } from './util/dates';
 import * as plural from 'plural-ru';
 import { profile } from './util/urls';
+import { LiveMatchUpdateEvent } from '../../gateway/events/gs/live-match-update.event';
 
 @Injectable()
 export class I18nService {
@@ -282,6 +283,32 @@ export class I18nService {
 \`!profile\` - выводит Вашу статистику или @отмеченного игрока в полной форме
 \`!invite @игрок\` - приглашает игрока в группу
 \`!party\` - выводит список игроков в Вашей группе
-\`!unparty\` - покинуть группу`;
+\`!unparty\` - покинуть группу
+\`!live\` - выводит preview текущей игры`;
+  }
+
+  liveMatchPreviewInGame(
+    b: Buffer,
+    liveMatch: LiveMatchUpdateEvent,
+  ): MessageOptions {
+    const r = liveMatch.heroes
+      .filter(t => t.team === 2)
+      .reduce((a, b) => a + b.kills, 0);
+    const d = liveMatch.heroes
+      .filter(t => t.team === 3)
+      .reduce((a, b) => a + b.kills, 0);
+
+    const host = liveMatch.server.split(':')[0];
+    const port = parseInt(liveMatch.server.split(':')[1]);
+    const watchUrl = `${host}:${port + 5}`;
+
+    return {
+      content: `${formatGameMode(
+        liveMatch.type,
+      )}, ${r} - ${d}\nСмотреть игру на сайте: https://dota2classic.ru/match/${
+        liveMatch.matchId
+      }\nСмотреть в клиенте: steam://connect/${watchUrl}`,
+      files: [b],
+    };
   }
 }

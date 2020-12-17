@@ -16,3 +16,7 @@ export const DB_HOST = () => process.env.POSTGRES_HOST
 export const profile = process.env.PROFILE;
 export const isProd = profile === 'prod';
 export const isDev = !isProd;
+
+const tmp = parseInt(process.env.LIVE_MATCH_DELAY);
+
+export const LIVE_MATCH_DELAY = Number.isNaN(tmp) ? 60_000 : tmp;

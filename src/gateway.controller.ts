@@ -17,6 +17,7 @@ import { GameResultsEvent } from "./gateway/events/gs/game-results.event";
 import { PartyInviteResultEvent } from "./gateway/events/party/party-invite-result.event";
 import { EnterQueueDeclinedEvent } from "./gateway/events/mm/enter-queue-declined.event";
 import { UserUpdatedEvent } from "./gateway/events/user/user-updated.event";
+import { LiveMatchUpdateEvent } from "./gateway/events/gs/live-match-update.event";
 
 @Controller()
 export class GatewayController {
@@ -28,7 +29,7 @@ export class GatewayController {
     const buff = data;
     buff.__proto__ = constructor.prototype;
     this.ebus.publish(buff);
-    this.logger.log(inspect(buff));
+    // this.logger.log(inspect(buff));
   }
 
   @EventPattern('QueueUpdatedEvent')
@@ -109,5 +110,10 @@ export class GatewayController {
   @EventPattern(UserUpdatedEvent.name)
   async UserUpdatedEvent(data: UserUpdatedEvent) {
     this.event(UserUpdatedEvent, data);
+  }
+
+  @EventPattern(LiveMatchUpdateEvent.name)
+  async LiveMatchUpdateEvent(data: LiveMatchUpdateEvent) {
+    this.event(LiveMatchUpdateEvent, data);
   }
 }
