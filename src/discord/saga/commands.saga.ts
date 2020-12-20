@@ -16,6 +16,7 @@ import { PrintHelpCommand } from "../command/PrintHelp/print-help.command";
 import { PrintLiveCommand } from "../command/PrintLive/print-live.command";
 import { DiscordNewMemberEvent } from "../event/discord-new-member.event";
 import { FullHelpRequestedEvent } from "../event/full-help-requested.event";
+import { PrintSiteCommand } from "../command/PrintSiteCommand/print-site.command";
 
 const commandDeletion = tap<DiscordMessageEvent>(it =>
   it.message
@@ -182,6 +183,16 @@ export class CommandsSaga {
       filter(it => it.message.cleanContent.startsWith('!live')),
       commandDeletion,
       map(it => new PrintLiveCommand(it.message.channel.id)),
+    );
+  };
+
+  @Saga()
+  siteInfo = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      filter(it => it.message.cleanContent.startsWith('!site')),
+      commandDeletion,
+      map(it => new PrintSiteCommand(it.message.channel.id)),
     );
   };
 }

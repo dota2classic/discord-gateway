@@ -38,6 +38,7 @@ import { LiveMatchService } from "./service/live-match.service";
 import { MatchFinishedLiveCloseHandler } from "./event-handler/match-finished-live-close.handler";
 import { DiscordNewMemberHandler } from "./event-handler/discord-new-member.handler";
 import { FullHelpRequestedHandler } from "./event-handler/full-help-requested.event";
+import { PrintSiteHandler } from "./command/PrintSiteCommand/print-site.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -83,7 +84,8 @@ const CommandHandlers = [
   InviteToPartyHandler,
   PrintStatsHandler,
   PrintHelpHandler,
-  PrintLiveHandler
+  PrintLiveHandler,
+  PrintSiteHandler
 ];
 export const DiscordProviders = [
   ...CommandHandlers,

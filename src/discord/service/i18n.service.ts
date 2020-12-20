@@ -284,7 +284,8 @@ export class I18nService {
 \`!invite @игрок\` - приглашает игрока в группу
 \`!party\` - выводит список игроков в Вашей группе
 \`!unparty\` - покинуть группу
-\`!live\` - выводит preview текущей игры`;
+\`!live\` - выводит preview текущей игры
+\`!site\` - страницы сайта`;
   }
 
   liveMatchPreviewInGame(
