@@ -14,6 +14,8 @@ import { InviteToPartyCommand } from "../command/InviteToParty/invite-to-party.c
 import { PrintStatsCommand } from "../command/PrintStats/print-stats.command";
 import { PrintHelpCommand } from "../command/PrintHelp/print-help.command";
 import { PrintLiveCommand } from "../command/PrintLive/print-live.command";
+import { DiscordNewMemberEvent } from "../event/discord-new-member.event";
+import { FullHelpRequestedEvent } from "../event/full-help-requested.event";
 
 const commandDeletion = tap<DiscordMessageEvent>(it =>
   it.message
@@ -30,6 +32,10 @@ export class CommandsSaga {
     this.client.on('message', (msg: Message) =>
       ebus.publish(new DiscordMessageEvent(msg)),
     );
+
+    this.client.on('guildMemberAdd', member => {
+      ebus.publish(new DiscordNewMemberEvent(member.user.id));
+    });
   }
 
   @Saga()
@@ -107,11 +113,14 @@ export class CommandsSaga {
         const mentioned: Snowflake | undefined = [
           ...it.message.mentions.users.values(),
         ].map(t => t.id)[0];
-        return new PrintStatsCommand(it.message.channel.id, mentioned || it.message.author.id, false);
+        return new PrintStatsCommand(
+          it.message.channel.id,
+          mentioned || it.message.author.id,
+          false,
+        );
       }),
     );
   };
-
 
   @Saga()
   profile = (events$: Observable<any>): Observable<ICommand> => {
@@ -123,11 +132,14 @@ export class CommandsSaga {
         const mentioned: Snowflake | undefined = [
           ...it.message.mentions.users.values(),
         ].map(t => t.id)[0];
-        return new PrintStatsCommand(it.message.channel.id, mentioned || it.message.author.id, true);
+        return new PrintStatsCommand(
+          it.message.channel.id,
+          mentioned || it.message.author.id,
+          true,
+        );
       }),
     );
   };
-
 
   @Saga()
   help = (events$: Observable<any>): Observable<ICommand> => {
@@ -136,6 +148,30 @@ export class CommandsSaga {
       filter(it => it.message.cleanContent.startsWith('!help')),
       commandDeletion,
       map(it => new PrintHelpCommand(it.message.channel.id)),
+    );
+  };
+
+  @Saga()
+  testjoin = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      filter(it => it.message.cleanContent.startsWith('!testjoin')),
+      tap((e: DiscordMessageEvent) =>
+        this.ebus.publish(new DiscordNewMemberEvent(e.message.author.id)),
+      ),
+    );
+  };
+
+
+  @Saga()
+  fullHelp = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(DiscordMessageEvent),
+      // dm only
+      filter(it => it.message.cleanContent.startsWith('!помощь') && it.message.channel.type === "dm"),
+      tap((e: DiscordMessageEvent) =>
+        this.ebus.publish(new FullHelpRequestedEvent(e.message.author.id)),
+      ),
     );
   };
 

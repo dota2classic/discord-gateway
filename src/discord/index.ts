@@ -36,6 +36,8 @@ import { PrintLiveHandler } from "./command/PrintLive/print-live.handler";
 import { LiveMatchUpdateHandler } from "./event-handler/live-match-update.handler";
 import { LiveMatchService } from "./service/live-match.service";
 import { MatchFinishedLiveCloseHandler } from "./event-handler/match-finished-live-close.handler";
+import { DiscordNewMemberHandler } from "./event-handler/discord-new-member.handler";
+import { FullHelpRequestedHandler } from "./event-handler/full-help-requested.event";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -60,7 +62,10 @@ const EventHandlers = [
   EnterQueueDeclinedHandler,
   UserUpdatedHandler,
   LiveMatchUpdateHandler,
-  MatchFinishedLiveCloseHandler
+  MatchFinishedLiveCloseHandler,
+
+  DiscordNewMemberHandler,
+  FullHelpRequestedHandler
 ];
 const Repositories = [
   ReadyCheckRepository,
