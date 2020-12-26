@@ -18,6 +18,7 @@ import { PartyInviteResultEvent } from "./gateway/events/party/party-invite-resu
 import { EnterQueueDeclinedEvent } from "./gateway/events/mm/enter-queue-declined.event";
 import { UserUpdatedEvent } from "./gateway/events/user/user-updated.event";
 import { LiveMatchUpdateEvent } from "./gateway/events/gs/live-match-update.event";
+import { UserRoleTimingsUpdateEvent } from "./gateway/events/user/user-role-timings-update.event";
 
 @Controller()
 export class GatewayController {
@@ -111,6 +112,12 @@ export class GatewayController {
   async UserUpdatedEvent(data: UserUpdatedEvent) {
     this.event(UserUpdatedEvent, data);
   }
+
+  @EventPattern(UserRoleTimingsUpdateEvent.name)
+  async UserRoleTimingsUpdateEvent(data: UserRoleTimingsUpdateEvent) {
+    this.event(UserRoleTimingsUpdateEvent, data);
+  }
+
 
   @EventPattern(LiveMatchUpdateEvent.name)
   async LiveMatchUpdateEvent(data: LiveMatchUpdateEvent) {
