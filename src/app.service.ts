@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
-import { EventBus, QueryBus } from '@nestjs/cqrs';
-import { QueueUpdatedEvent } from './gateway/events/queue-updated.event';
-import { MatchmakingMode } from './gateway/shared-types/matchmaking-mode';
-import { GetRoleSubscriptionsQuery } from './gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query';
-import { GetRoleSubscriptionsQueryResult } from './gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions-query.result';
-import { DiscordUserRepository } from './discord/repository/discord-user.repository';
-import { Client, Guild, Snowflake, TextChannel } from 'discord.js';
-import { Role } from './gateway/shared-types/roles';
-import { PlayerId } from './gateway/shared-types/player-id';
+import { Injectable } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { EventBus, QueryBus } from "@nestjs/cqrs";
+import { QueueUpdatedEvent } from "./gateway/events/queue-updated.event";
+import { MatchmakingMode } from "./gateway/shared-types/matchmaking-mode";
+import { GetRoleSubscriptionsQuery } from "./gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query";
+import { GetRoleSubscriptionsQueryResult } from "./gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions-query.result";
+import { DiscordUserRepository } from "./discord/repository/discord-user.repository";
+import { Client, Guild, Snowflake, TextChannel } from "discord.js";
+import { Role } from "./gateway/shared-types/roles";
+import { PlayerId } from "./gateway/shared-types/player-id";
 
 @Injectable()
 export class AppService {
@@ -18,7 +18,9 @@ export class AppService {
     private readonly userRep: DiscordUserRepository,
     private readonly client: Client,
     private readonly guild: Guild,
-  ) {}
+  ) {
+
+  }
   @Cron('0 */30 12-23 * * *')
   async engageGame() {
     // this.ebus.publish(new EngageNeededEvent());
@@ -133,7 +135,7 @@ export class AppService {
   }
 
   // every hour
-  @Cron('0 * * * *')
+  @Cron(CronExpression.EVERY_HOUR)
   async syncRoles() {
     console.log(`Starting syncRoles task`);
     const OLD_ROLE_ID = '726917935117107212';
