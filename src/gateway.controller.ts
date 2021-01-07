@@ -19,6 +19,7 @@ import { EnterQueueDeclinedEvent } from "./gateway/events/mm/enter-queue-decline
 import { UserUpdatedEvent } from "./gateway/events/user/user-updated.event";
 import { LiveMatchUpdateEvent } from "./gateway/events/gs/live-match-update.event";
 import { UserRoleTimingsUpdateEvent } from "./gateway/events/user/user-role-timings-update.event";
+import { EnterRankedQueueDeclinedEvent } from "./gateway/events/mm/enter-ranked-queue-declined.event";
 
 @Controller()
 export class GatewayController {
@@ -82,6 +83,11 @@ export class GatewayController {
   @EventPattern(EnterQueueDeclinedEvent.name)
   async EnterQueueDeclinedEvent(data: EnterQueueDeclinedEvent) {
     this.event(EnterQueueDeclinedEvent, data);
+  }
+
+  @EventPattern(EnterRankedQueueDeclinedEvent.name)
+  async EnterRankedQueueDeclinedEvent(data: EnterRankedQueueDeclinedEvent) {
+    this.event(EnterRankedQueueDeclinedEvent, data);
   }
 
 

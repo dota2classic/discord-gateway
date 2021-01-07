@@ -39,6 +39,7 @@ import { MatchFinishedLiveCloseHandler } from "./event-handler/match-finished-li
 import { DiscordNewMemberHandler } from "./event-handler/discord-new-member.handler";
 import { FullHelpRequestedHandler } from "./event-handler/full-help-requested.event";
 import { PrintSiteHandler } from "./command/PrintSiteCommand/print-site.handler";
+import { EnterRankedQueueDeclinedHandler } from "./event-handler/enter-ranked-queue-declined.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -61,6 +62,7 @@ const EventHandlers = [
 
   EngageNeededHandler,
   EnterQueueDeclinedHandler,
+  EnterRankedQueueDeclinedHandler,
   UserUpdatedHandler,
   LiveMatchUpdateHandler,
   MatchFinishedLiveCloseHandler,
