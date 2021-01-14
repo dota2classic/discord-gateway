@@ -36,6 +36,8 @@ async function initRuntimeData(app: INestMicroservice) {
   >(new GetAllConnectionsQuery(UserConnection.DISCORD));
 
   console.log(`Received ${cons.entries.length} entries`);
+
+
   cons.entries.forEach(t => {
     discordUserRepository.save(
       t.externalId,

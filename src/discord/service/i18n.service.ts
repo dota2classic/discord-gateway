@@ -299,22 +299,17 @@ export class I18nService {
       .filter(t => t.team === 3)
       .reduce((a, b) => a + b.kills, 0);
 
-    const host = liveMatch.server.split(':')[0];
-    const port = parseInt(liveMatch.server.split(':')[1]);
-    const watchUrl = `${host}:${port + 5}`;
-
     return {
       content: `${formatGameMode(
         liveMatch.type,
       )}, ${r} - ${d}\nСмотреть игру на сайте: https://dota2classic.ru/match/${
         liveMatch.matchId
-      }\nСмотреть в клиенте: steam://connect/${watchUrl}`,
-      files: [b],
+      }`,
+      // files: [b],
     };
   }
 
-
-  welcomeMessage(){
+  welcomeMessage() {
     return new MessageEmbed()
       .setDescription(`Как начать играть в Dota 2 Classic 6.81b?
 
@@ -328,7 +323,7 @@ export class I18nService {
 
 **ВНИМАНИЕ!
 НЕ НУЖНО НАЖИМАТЬ КНОПКУ "НАЙТИ ИГРУ" В СТАРОМ КЛИЕНТЕ.
-ВЫ ПОЛУЧИТЕ ВРЕМЕННЫЙ БАН ПОИСКА В АКТУАЛЬНОЙ ВЕРСИИ DOTA 2.**`)
+ВЫ ПОЛУЧИТЕ ВРЕМЕННЫЙ БАН ПОИСКА В АКТУАЛЬНОЙ ВЕРСИИ DOTA 2.**`);
   }
 
   rankedLocked(newbieGamesLeft: number) {
