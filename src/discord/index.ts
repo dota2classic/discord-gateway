@@ -31,7 +31,6 @@ import { PartyInviteResultHandler } from "./event-handler/party-invite-result.ha
 import { EngageNeededHandler } from "./event-handler/engage-needed.handler";
 import { EnterQueueDeclinedHandler } from "./event-handler/enter-queue-declined.handler";
 import { PrintHelpHandler } from "./command/PrintHelp/print-help.handler";
-import { UserUpdatedHandler } from "./event-handler/user-updated.handler";
 import { PrintLiveHandler } from "./command/PrintLive/print-live.handler";
 import { LiveMatchUpdateHandler } from "./event-handler/live-match-update.handler";
 import { LiveMatchService } from "./service/live-match.service";
@@ -40,6 +39,7 @@ import { DiscordNewMemberHandler } from "./event-handler/discord-new-member.hand
 import { FullHelpRequestedHandler } from "./event-handler/full-help-requested.event";
 import { PrintSiteHandler } from "./command/PrintSiteCommand/print-site.handler";
 import { EnterRankedQueueDeclinedHandler } from "./event-handler/enter-ranked-queue-declined.handler";
+import { SyncRolesHandler } from "./command/SyncRoles/sync-roles.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -63,7 +63,7 @@ const EventHandlers = [
   EngageNeededHandler,
   EnterQueueDeclinedHandler,
   EnterRankedQueueDeclinedHandler,
-  UserUpdatedHandler,
+
   LiveMatchUpdateHandler,
   MatchFinishedLiveCloseHandler,
 
@@ -87,7 +87,9 @@ const CommandHandlers = [
   PrintStatsHandler,
   PrintHelpHandler,
   PrintLiveHandler,
-  PrintSiteHandler
+  PrintSiteHandler,
+
+  SyncRolesHandler
 ];
 export const DiscordProviders = [
   ...CommandHandlers,
