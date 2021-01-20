@@ -1,13 +1,13 @@
 import { EventBus, EventsHandler, IEventHandler, QueryBus } from '@nestjs/cqrs';
 import { QueueUpdatedEvent } from 'gateway/events/queue-updated.event';
 import { Client, Guild } from 'discord.js';
-import { QueueStateQueryResult } from 'gateway/queries/QueueState/queue-state-query.result';
-import { QueueStateQuery } from 'gateway/queries/QueueState/queue-state.query';
 import {
   QueueEntry,
   QueueUpdateReceivedEvent,
 } from 'discord/event/queue-update-received.event';
 import {DiscordUserRepository} from "../repository/discord-user.repository";
+import { GetQueueStateQueryResult } from "../../gateway/queries/QueueState/get-queue-state-query.result";
+import { GetQueueStateQuery } from "../../gateway/queries/QueueState/get-queue-state.query";
 
 @EventsHandler(QueueUpdatedEvent)
 export class QueueUpdatedHandler implements IEventHandler<QueueUpdatedEvent> {
@@ -22,8 +22,8 @@ export class QueueUpdatedHandler implements IEventHandler<QueueUpdatedEvent> {
   }
 
   async handle(event: QueueUpdatedEvent) {
-    const qs: QueueStateQueryResult = await this.qbus.execute(
-      new QueueStateQuery(event.mode),
+    const qs: GetQueueStateQueryResult = await this.qbus.execute(
+      new GetQueueStateQuery(event.mode),
     );
 
     const entries: QueueEntry[] = [];

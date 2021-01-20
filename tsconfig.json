@@ -16,7 +16,8 @@
     "incremental": true
   },
   "paths": {
-    "tests/*": ["__tests__/*"]
+    "tests/*": ["__tests__/*"],
+    "gateway/*": ["src/gateway/*"]
   },
   "exclude": ["node_modules", "dist"]
 }

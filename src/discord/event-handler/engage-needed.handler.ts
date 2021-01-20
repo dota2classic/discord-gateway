@@ -4,12 +4,12 @@ import { Client, TextChannel } from 'discord.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelModel, ChannelType } from '../model/channel.model';
 import { Repository } from 'typeorm';
-import { QueueStateQueryResult } from '../../gateway/queries/QueueState/queue-state-query.result';
-import { QueueStateQuery } from '../../gateway/queries/QueueState/queue-state.query';
 import {
   MatchmakingMode,
   RoomSizes,
 } from '../../gateway/shared-types/matchmaking-mode';
+import { GetQueueStateQueryResult } from "../../gateway/queries/QueueState/get-queue-state-query.result";
+import { GetQueueStateQuery } from "../../gateway/queries/QueueState/get-queue-state.query";
 
 @EventsHandler(EngageNeededEvent)
 export class EngageNeededHandler implements IEventHandler<EngageNeededEvent> {
@@ -61,8 +61,8 @@ export class EngageNeededHandler implements IEventHandler<EngageNeededEvent> {
 
     const engageMode = MatchmakingMode.RANKED;
 
-    const qs: QueueStateQueryResult = await this.qbus.execute(
-      new QueueStateQuery(engageMode),
+    const qs: GetQueueStateQueryResult = await this.qbus.execute(
+      new GetQueueStateQuery(engageMode),
     );
 
     const inQueue = qs.entries.length;

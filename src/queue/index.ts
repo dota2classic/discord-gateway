@@ -7,13 +7,13 @@ import { DeleteQueueMessageHandler } from 'queue/command/DeleteQueueMessage/dele
 import { PlayerLeaveQueueHandler } from 'queue/command/PlayerLeaveQueue/player-leave-queue.handler';
 import { I18nService } from '../discord/service/i18n.service';
 import { outerQuery } from '../gateway/util/outerQuery';
-import { QueueStateQuery } from '../gateway/queries/QueueState/queue-state.query';
 import { GetAllConnectionsQuery } from '../gateway/queries/GetAllConnections/get-all-connections.query';
 import { GetByConnectionQuery } from '../gateway/queries/GetByConnection/get-by-connection.query';
 import { GetUserInfoQuery } from "../gateway/queries/GetUserInfo/get-user-info.query";
 import { GetPartyQuery } from "../gateway/queries/GetParty/get-party.query";
 import { GetPlayerInfoQuery } from "../gateway/queries/GetPlayerInfo/get-player-info.query";
 import { GetRoleSubscriptionsQuery } from "../gateway/queries/user/GetRoleSubscriptions/get-role-subscriptions.query";
+import { GetQueueStateQuery } from "../gateway/queries/QueueState/get-queue-state.query";
 
 const CommandHandlers = [
   CreateQueueMessageHandler,
@@ -26,7 +26,7 @@ const CommandHandlers = [
 ];
 
 const QueryHandlers = [
-  outerQuery(QueueStateQuery, 'QueryCore'),
+  outerQuery(GetQueueStateQuery, 'QueryCore'),
   outerQuery(GetAllConnectionsQuery, 'QueryCore'),
   outerQuery(GetByConnectionQuery, 'QueryCore'),
   outerQuery(GetUserInfoQuery, 'QueryCore'),
