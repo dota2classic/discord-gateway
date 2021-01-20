@@ -9,7 +9,7 @@ export class LiveMatchService {
   // MINUTE DELAY
   // matchID key => events
   private cache = new Map<number, Subject<LiveMatchUpdateEvent>>();
-  private readCache = new Map<number, Observable<LiveMatchUpdateEvent>>();
+  private finishedMatchesCache = new Map<number, boolean>();
 
   private readonly entityCache = new Map<number, LiveMatchUpdateEvent>();
   private readonly logger = new Logger(LiveMatchService.name);
@@ -18,16 +18,19 @@ export class LiveMatchService {
     this.logger.log(`Using delay of ${LIVE_MATCH_DELAY} for live previews`);
   }
 
+  private isMatchComplete(id: number): boolean {
+    return this.finishedMatchesCache.get(id) === true;
+  }
+
   public pushEvent(event: LiveMatchUpdateEvent) {
+    if (this.isMatchComplete(event.matchId)) return;
+
     if (!this.cache.has(event.matchId)) {
       // if not subject, we
       const eventStream = new Subject<LiveMatchUpdateEvent>();
       this.cache.set(event.matchId, eventStream);
-      const delayedStream = eventStream.pipe(delay(LIVE_MATCH_DELAY));
-      this.readCache.set(event.matchId, delayedStream);
 
-      delayedStream.subscribe(e => {
-        console.log('Updated ecache live matches');
+      eventStream.pipe(delay(LIVE_MATCH_DELAY)).subscribe(e => {
         this.entityCache.set(e.matchId, e);
       });
     }
@@ -40,12 +43,25 @@ export class LiveMatchService {
     if (sub) {
       sub.complete();
       this.cache.delete(id);
-      this.readCache.delete(id);
+      this.finishedMatchesCache.set(id, true);
       this.entityCache.delete(id);
     }
   }
 
-  liveMatch() {
-    return [...this.entityCache.values()][0]
+  public list(): LiveMatchUpdateEvent[] {
+    return [...this.entityCache.values()].filter(t => !this.isMatchComplete(t.matchId));
+  }
+
+  public streamMatch(id: number): Observable<LiveMatchUpdateEvent> {
+    const liveOne = this.cache.get(id);
+
+    if (liveOne && !this.isMatchComplete(id)) {
+      return concat(
+        of(this.entityCache.get(id)),
+        liveOne, //.pipe(delay(LIVE_MATCH_DELAY)),
+      );
+    }
+
+    return of();
   }
 }

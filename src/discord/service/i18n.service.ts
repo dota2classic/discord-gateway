@@ -289,22 +289,28 @@ export class I18nService {
   }
 
   liveMatchPreviewInGame(
-    b: Buffer,
-    liveMatch: LiveMatchUpdateEvent,
+    list: LiveMatchUpdateEvent[]
   ): MessageOptions {
-    const r = liveMatch.heroes
-      .filter(t => t.team === 2)
-      .reduce((a, b) => a + b.kills, 0);
-    const d = liveMatch.heroes
-      .filter(t => t.team === 3)
-      .reduce((a, b) => a + b.kills, 0);
 
+    const items: Partial<{
+      [key in MatchmakingMode]: {
+        mode: MatchmakingMode;
+        count: number;
+      }
+    }> = {}
+
+    list.forEach(t => {
+      if(!items[t.type]){
+        items[t.type] = {
+          mode: t.type,
+          count: 1
+        }
+      }else{
+        items[t.type].count++;
+      }
+    })
     return {
-      content: `${formatGameMode(
-        liveMatch.type,
-      )}, ${r} - ${d}\nСмотреть игру на сайте: https://dota2classic.ru/match/${
-        liveMatch.matchId
-      }`,
+      content: `Сейчас идет:\n${Object.values(items).map(t => `${formatGameMode(t.mode)} - ${t.count}`).join("\n")}\nПолный список игр: https://dota2classic.ru/live`,
       // files: [b],
     };
   }
