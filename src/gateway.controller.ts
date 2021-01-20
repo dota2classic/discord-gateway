@@ -20,6 +20,7 @@ import { UserUpdatedEvent } from "./gateway/events/user/user-updated.event";
 import { LiveMatchUpdateEvent } from "./gateway/events/gs/live-match-update.event";
 import { UserRoleTimingsUpdateEvent } from "./gateway/events/user/user-role-timings-update.event";
 import { EnterRankedQueueDeclinedEvent } from "./gateway/events/mm/enter-ranked-queue-declined.event";
+import { PlayerNotLoadedEvent } from 'gateway/events/bans/player-not-loaded.event';
 
 @Controller()
 export class GatewayController {
@@ -124,6 +125,10 @@ export class GatewayController {
     this.event(UserRoleTimingsUpdateEvent, data);
   }
 
+  @EventPattern(PlayerNotLoadedEvent.name)
+  async PlayerNotLoadedEvent(data: PlayerNotLoadedEvent) {
+    this.event(PlayerNotLoadedEvent, data);
+  }
 
   @EventPattern(LiveMatchUpdateEvent.name)
   async LiveMatchUpdateEvent(data: LiveMatchUpdateEvent) {

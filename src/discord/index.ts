@@ -40,6 +40,7 @@ import { FullHelpRequestedHandler } from "./event-handler/full-help-requested.ev
 import { PrintSiteHandler } from "./command/PrintSiteCommand/print-site.handler";
 import { EnterRankedQueueDeclinedHandler } from "./event-handler/enter-ranked-queue-declined.handler";
 import { SyncRolesHandler } from "./command/SyncRoles/sync-roles.handler";
+import { PlayerNotLoadedHandler } from "./event-handler/player-not-loaded.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -68,7 +69,8 @@ const EventHandlers = [
   MatchFinishedLiveCloseHandler,
 
   DiscordNewMemberHandler,
-  FullHelpRequestedHandler
+  FullHelpRequestedHandler,
+  PlayerNotLoadedHandler
 ];
 const Repositories = [
   ReadyCheckRepository,
