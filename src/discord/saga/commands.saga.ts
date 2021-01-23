@@ -182,7 +182,16 @@ export class CommandsSaga {
       ofType(DiscordMessageEvent),
       filter(it => it.message.cleanContent.startsWith('!live')),
       commandDeletion,
-      map(it => new PrintLiveCommand(it.message.channel.id)),
+      map(it => {
+
+        const mentioned: Snowflake | undefined = [
+          ...it.message.mentions.users.values(),
+        ].map(t => t.id)[0];
+        return new PrintLiveCommand(
+          it.message.channel.id,
+          mentioned
+        );
+      }),
     );
   };
 
