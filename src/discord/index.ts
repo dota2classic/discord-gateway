@@ -40,8 +40,7 @@ import { FullHelpRequestedHandler } from "./event-handler/full-help-requested.ev
 import { PrintSiteHandler } from "./command/PrintSiteCommand/print-site.handler";
 import { EnterRankedQueueDeclinedHandler } from "./event-handler/enter-ranked-queue-declined.handler";
 import { SyncRolesHandler } from "./command/SyncRoles/sync-roles.handler";
-import { PlayerNotLoadedHandler } from "./event-handler/player-not-loaded.handler";
-import { PlayerDeclinedGameHandler } from "./event-handler/player-declined-game.handler";
+import { BanSystemEventHandler } from "./event-handler/ban-system-event.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -71,8 +70,7 @@ const EventHandlers = [
 
   DiscordNewMemberHandler,
   FullHelpRequestedHandler,
-  PlayerNotLoadedHandler,
-  PlayerDeclinedGameHandler
+  BanSystemEventHandler
 ];
 const Repositories = [
   ReadyCheckRepository,

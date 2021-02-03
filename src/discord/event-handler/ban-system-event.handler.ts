@@ -4,24 +4,23 @@ import { Client, Guild, TextChannel } from "discord.js";
 import { steamIdToNum } from "../service/util/steamids";
 import { DiscordUserRepository } from "../repository/discord-user.repository";
 import { PlayerId } from "../../gateway/shared-types/player-id";
+import { BanSystemEvent } from "../../gateway/events/gs/ban-system.event";
+import { I18nService } from "../service/i18n.service";
 
-@EventsHandler(PlayerNotLoadedEvent)
-export class PlayerNotLoadedHandler
-  implements IEventHandler<PlayerNotLoadedEvent> {
+@EventsHandler(BanSystemEvent)
+export class BanSystemEventHandler
+  implements IEventHandler<BanSystemEvent> {
   constructor(
     private client: Client,
     private readonly guild: Guild,
     private readonly userRep: DiscordUserRepository,
+    private readonly i18nService: I18nService
   ) {}
 
-  async handle(event: PlayerNotLoadedEvent) {
+  async handle(event: BanSystemEvent) {
     const ch = this.guild.channels.resolve('720288119227678832') as TextChannel;
 
-    const duser = this.userRep.findByPlayerId(event.playerId)
-    await ch.send(
-      `Игрок https://dota2classic.ru/player/${steamIdToNum(
-        event.playerId.value,
-      )} не загрузился в игру ${event.matchId}. ${duser && `<@${duser.discordId}>`}`,
-    );
+    const duser = this.userRep.findByPlayerId(event.id)
+    await ch.send(this.i18nService.banSystemLog(event, duser));
   }
 }

@@ -4,7 +4,7 @@ import {
   RoomSizes,
 } from '../../gateway/shared-types/matchmaking-mode';
 import { QueueEntry } from '../event/queue-update-received.event';
-import { MessageEmbed, MessageOptions } from 'discord.js';
+import { MessageEmbed, MessageOptions, StringResolvable } from "discord.js";
 import {
   ReadyCheckEntry,
   RoomReadyState,
@@ -21,6 +21,11 @@ import { formatDateFullStr } from './util/dates';
 import * as plural from 'plural-ru';
 import { profile } from './util/urls';
 import { LiveMatchUpdateEvent } from '../../gateway/events/gs/live-match-update.event';
+import { steamIdToNum } from './util/steamids';
+import { DiscordUserModel } from '../model/discord-user.model';
+import { formatDuration } from '../../util/formatDuration';
+import { BanSystemEvent } from '../../gateway/events/gs/ban-system.event';
+import { BanReason } from "../../gateway/shared-types/ban";
 
 @Injectable()
 export class I18nService {
@@ -288,29 +293,30 @@ export class I18nService {
 \`!site\` - страницы сайта`;
   }
 
-  liveMatchPreviewInGame(
-    list: LiveMatchUpdateEvent[]
-  ): MessageOptions {
-
-    const items: Partial<{
-      [key in MatchmakingMode]: {
-        mode: MatchmakingMode;
-        count: number;
+  liveMatchPreviewInGame(list: LiveMatchUpdateEvent[]): MessageOptions {
+    const items: Partial<
+      {
+        [key in MatchmakingMode]: {
+          mode: MatchmakingMode;
+          count: number;
+        };
       }
-    }> = {}
+    > = {};
 
     list.forEach(t => {
-      if(!items[t.type]){
+      if (!items[t.type]) {
         items[t.type] = {
           mode: t.type,
-          count: 1
-        }
-      }else{
+          count: 1,
+        };
+      } else {
         items[t.type].count++;
       }
-    })
+    });
     return {
-      content: `Сейчас идет:\n${Object.values(items).map(t => `${formatGameMode(t.mode)} - ${t.count}`).join("\n")}\nПолный список игр: https://dota2classic.ru/live`,
+      content: `Сейчас идет:\n${Object.values(items)
+        .map(t => `${formatGameMode(t.mode)} - ${t.count}`)
+        .join('\n')}\nПолный список игр: https://dota2classic.ru/live`,
       // files: [b],
     };
   }
@@ -334,5 +340,42 @@ export class I18nService {
 
   rankedLocked(newbieGamesLeft: number) {
     return `Чтобы играть рейтинговые игры, нужно сыграть еще ${newbieGamesLeft} игр в обычном режиме или режиме с ботами. `;
+  }
+
+  banReason(r: BanReason){
+    switch (r){
+      case BanReason.GAME_DECLINE:
+        return "Отклонение найденной игры"
+      case BanReason.LOAD_FAILURE:
+        return "Не загрузился в игру"
+      case BanReason.INFINITE_BAN:
+        return "Бан из админки"
+      case BanReason.REPORTS:
+        return "Жалобы игроков"
+    }
+  }
+
+  banSystemLog(event: BanSystemEvent, duser?: DiscordUserModel) {
+    const e = new MessageEmbed()
+      .setDescription(`Решение системы банов`)
+      .addField(
+        `Игрок`,
+        `https://dota2classic.ru/player/${steamIdToNum(event.id.value)}`,
+      );
+
+    if (duser) {
+      e.addField(`Discord`, `<@${duser.discordId}>`);
+    }
+
+    e.addField(`Длительность бана`, formatDuration(event.banDuration));
+    e.addField(`Новое время окончания`, formatDateFullStr(event.resultBanDate));
+    e.addFields(
+      event.entries.map(entry => ( {
+        name: this.banReason(entry.reason),
+        value: formatDateFullStr(entry.time),
+      }))
+    )
+
+    return e;
   }
 }
