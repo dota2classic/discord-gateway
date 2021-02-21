@@ -23,6 +23,7 @@ import { EnterRankedQueueDeclinedEvent } from "./gateway/events/mm/enter-ranked-
 import { PlayerNotLoadedEvent } from 'gateway/events/bans/player-not-loaded.event';
 import { PlayerDeclinedGameEvent } from "./gateway/events/mm/player-declined-game.event";
 import { BanSystemEvent } from 'gateway/events/gs/ban-system.event';
+import { SteamLagReportedEvent } from 'gateway/events/steam-lag-reported.event';
 
 @Controller()
 export class GatewayController {
@@ -140,5 +141,10 @@ export class GatewayController {
   @EventPattern(LiveMatchUpdateEvent.name)
   async LiveMatchUpdateEvent(data: LiveMatchUpdateEvent) {
     this.event(LiveMatchUpdateEvent, data);
+  }
+
+  @EventPattern(SteamLagReportedEvent.name)
+  async SteamLagReportedEvent(data: SteamLagReportedEvent) {
+    this.event(SteamLagReportedEvent, data);
   }
 }

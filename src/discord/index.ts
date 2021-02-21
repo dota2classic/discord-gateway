@@ -41,6 +41,7 @@ import { PrintSiteHandler } from "./command/PrintSiteCommand/print-site.handler"
 import { EnterRankedQueueDeclinedHandler } from "./event-handler/enter-ranked-queue-declined.handler";
 import { SyncRolesHandler } from "./command/SyncRoles/sync-roles.handler";
 import { BanSystemEventHandler } from "./event-handler/ban-system-event.handler";
+import { SteamLagReportedHandler } from "./event-handler/steam-lag-reported.handler";
 
 const Sagas = [CommandsSaga, DiscordSaga];
 const EventHandlers = [
@@ -54,6 +55,8 @@ const EventHandlers = [
   MatchStartedHandler,
   MatchFinishedHandler,
   AnnounceMatchFinishedHandler,
+
+  SteamLagReportedHandler,
   GameServerStartedHandler,
 
   RoomNotReadyHandler,
