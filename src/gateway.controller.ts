@@ -24,6 +24,7 @@ import { PlayerNotLoadedEvent } from 'gateway/events/bans/player-not-loaded.even
 import { PlayerDeclinedGameEvent } from "./gateway/events/mm/player-declined-game.event";
 import { BanSystemEvent } from 'gateway/events/gs/ban-system.event';
 import { SteamLagReportedEvent } from 'gateway/events/steam-lag-reported.event';
+import { LogEvent } from 'gateway/events/log.event';
 
 @Controller()
 export class GatewayController {
@@ -147,4 +148,11 @@ export class GatewayController {
   async SteamLagReportedEvent(data: SteamLagReportedEvent) {
     this.event(SteamLagReportedEvent, data);
   }
+
+  @EventPattern(LogEvent.name)
+  async LogEvent(data: LogEvent) {
+    this.event(LogEvent, data);
+  }
+
+
 }

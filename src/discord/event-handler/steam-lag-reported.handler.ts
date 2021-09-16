@@ -5,6 +5,7 @@ import { Client, MessageEmbed, TextChannel } from "discord.js";
 import formatGameMode from "../../gateway/util/formatGameMode";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { dmItachi } from "../../util/dmItachi";
 
 @EventsHandler(SteamLagReportedEvent)
 export class SteamLagReportedHandler
@@ -16,15 +17,17 @@ export class SteamLagReportedHandler
   ) {}
 
   async handle(event: SteamLagReportedEvent) {
-    const channelModel = await this.channelModelRepository.findOne({
-      type: ChannelType.CHAT,
-    });
-    if (!channelModel) return;
+    // const channelModel = await this.channelModelRepository.findOne({
+    //   type: ChannelType.CHAT,
+    // });
+    // if (!channelModel) return;
+    //
+    // const ch = (await this.client.channels.resolve(
+    //   channelModel.channelId,
+    // )) as TextChannel;
+    //
+    // await ch.send();
 
-    const ch = (await this.client.channels.resolve(
-      channelModel.channelId,
-    )) as TextChannel;
-
-    await ch.send(`Обнаружена проблема с подключением к Steam`);
+    await dmItachi(this.client, `Обнаружена проблема с подключением к Steam`);
   }
 }

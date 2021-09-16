@@ -6,6 +6,7 @@ import { DiscordUserRepository } from "../repository/discord-user.repository";
 import { PlayerId } from "../../gateway/shared-types/player-id";
 import { BanSystemEvent } from "../../gateway/events/gs/ban-system.event";
 import { I18nService } from "../service/i18n.service";
+import { dmItachi } from "../../util/dmItachi";
 
 @EventsHandler(BanSystemEvent)
 export class BanSystemEventHandler
@@ -18,9 +19,10 @@ export class BanSystemEventHandler
   ) {}
 
   async handle(event: BanSystemEvent) {
-    const ch = this.guild.channels.resolve('720288119227678832') as TextChannel;
+    // const ch = this.guild.channels.resolve('720288119227678832') as TextChannel;
 
     const duser = this.userRep.findByPlayerId(event.id)
-    await ch.send(this.i18nService.banSystemLog(event, duser));
+    // await ch.send(this.i18nService.banSystemLog(event, duser));
+    await dmItachi(this.client, this.i18nService.banSystemLog(event, duser))
   }
 }

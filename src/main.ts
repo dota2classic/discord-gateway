@@ -19,6 +19,7 @@ import { AppService } from "./app.service";
 import { createCanvas, loadImage } from "canvas";
 import * as fs from "fs";
 import { LiveMatchUpdateEvent } from "./gateway/events/gs/live-match-update.event";
+import { Client, Guild, TextChannel } from "discord.js";
 
 export function prepareModels(publisher: EventPublisher) {
   publisher.mergeClassContext(QueueMessageSyncModel);
@@ -74,28 +75,38 @@ async function bootstrap() {
   const clogger = new Logger('CommandLogger');
   const elogger = new Logger('EventLogger');
 
-  ebus._subscribe(
-    new Subscriber<any>(e => {
-      if (e.__proto__.constructor.name === DiscordMessageEvent.name || e.__proto__.constructor.name === LiveMatchUpdateEvent.name)
-        elogger.log(e.__proto__.constructor.name);
-      else elogger.log(`${inspect(e)}`);
-    }),
-  );
-
-  cbus._subscribe(
-    new Subscriber<any>(e => {
-      clogger.log(
-        `${inspect(e)}`,
-        // e.__proto__.constructor.name,
-      );
-    }),
-  );
+  // ebus._subscribe(
+  //   new Subscriber<any>(e => {
+  //     if (e.__proto__.constructor.name === DiscordMessageEvent.name || e.__proto__.constructor.name === LiveMatchUpdateEvent.name)
+  //       elogger.log(e.__proto__.constructor.name);
+  //     else elogger.log(`${inspect(e)}`);
+  //   }),
+  // );
+  //
+  // cbus._subscribe(
+  //   new Subscriber<any>(e => {
+  //     clogger.log(
+  //       `${inspect(e)}`,
+  //       // e.__proto__.constructor.name,
+  //     );
+  //   }),
+  // );
 
   app.get(EventBus).publish(new MicroserviceStartedEvent());
   console.log(`?`);
 
-  await app.get(AppService).syncRoles();
+  // await app.get(AppService).syncRoles();
+
+  const guild = await app.get(Guild)
+  // await (await guild.members.fetch('274155097951305728')).ban()
+  // await (await guild.members.fetch('772105458403115018')).ban()
+  // await (await guild.members.fetch('450013785055297538')).ban()
+  await (await guild.members.fetch('318014316874039306')).roles.add('848237755842560050')
+  // await (await guild.members.fetch('393408637453860864')).roles.add('682939251499073587')
+  // const c: TextChannel = guild.channels.resolve('678686834729025539') as TextChannel
+  // await c.send("@here влад", { files: ['https://cdn.discordapp.com/attachments/678686834729025539/851205788776792144/fHTDhlMpwz4.png']} )
   // ebus.publish(new EngageNeededEvent())
 }
 bootstrap();
+
 
